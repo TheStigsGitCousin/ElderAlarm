@@ -6,4 +6,12 @@
     <TextView android:id="@+id/text" android:layout_width="wrap_content"
         android:layout_height="wrap_content" android:layout_centerHorizontal="true"
         android:layout_centerVertical="true" android:text="@string/hello_round" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Send Toast"
+        android:id="@+id/btn_toast"
+        android:layout_above="@+id/text"
+        android:layout_alignEnd="@+id/text" />
 </RelativeLayout>
