@@ -12,7 +12,7 @@ public class AccelerometerHandler implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        // In this example, alpha is calculated as t / (t + dT),
+        // In thisa example, alpha is calculated as t / (t + dT),
         // where t is the low-pass filter's time-constant and
         // dT is the event delivery rate.
 
