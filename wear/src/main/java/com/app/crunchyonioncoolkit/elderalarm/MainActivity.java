@@ -2,6 +2,7 @@ package com.app.crunchyonioncoolkit.elderalarm;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
@@ -21,10 +22,15 @@ import java.util.List;
 
 public class MainActivity extends Activity {
 
+    private String TAG = "WEAR";
+
     //private TextView mTextView;
+    // Accelerometer
     private SensorManager mSensorManager;
-    private Sensor mSensor;
+    private Sensor accelerometerSensor;
     private AccelerometerHandler accelerometerHandler;
+    private PulseHandler pulseHandler;
+    private Sensor pulseSensor;
 
     private static final long CONNECTION_TIME_OUT_MS = 100;
     private static final String MESSAGE = "Hello Wear!";
@@ -49,6 +55,11 @@ public class MainActivity extends Activity {
         });
 
         initializeSensors();
+
+        Intent intent = new Intent(this, AlarmActivity.class);
+        MyParcelable data = new MyParcelable(10, "cardiac arrest");
+        intent.putExtra("message", data);
+        startActivity(intent);
     }
 
     /**
@@ -75,6 +86,7 @@ public class MainActivity extends Activity {
 
     /**
      * Returns a GoogleApiClient that can access the Wear API.
+     *
      * @param context
      * @return A GoogleApiClient that can make calls to the Wear API
      */
@@ -102,9 +114,9 @@ public class MainActivity extends Activity {
                 Log.d("WEAR_CRUNCHY", "3");
                 if (nodes.size() > 0) {
                     nodeId = nodes.get(0).getId();
-                    Log.d("WEAR_CRUNCHY", "A NODE "+nodeId);
+                    Log.d("WEAR_CRUNCHY", "A NODE " + nodeId);
 
-                }else{
+                } else {
                     Log.d("WEAR_CRUNCHY", "NO NODES");
                 }
                 Log.d("WEAR_CRUNCHY", "4");
@@ -143,10 +155,16 @@ public class MainActivity extends Activity {
 
 
     void initializeSensors() {
+
+        // Accelerometer
         accelerometerHandler = new AccelerometerHandler();
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        accelerometerSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
 
-        mSensorManager.registerListener(accelerometerHandler, mSensor, 200, 50);
+        mSensorManager.registerListener(accelerometerHandler, accelerometerSensor, SensorManager.SENSOR_DELAY_FASTEST);
+
+        // Pulse
+        pulseSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
+        mSensorManager.registerListener(pulseHandler, pulseSensor, SensorManager.SENSOR_DELAY_FASTEST);
     }
 }
