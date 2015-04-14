@@ -10,6 +10,12 @@ import android.util.Log;
  */
 public class AccelerometerHandler implements SensorEventListener {
 
+    private static float[] accelerationVector;
+
+    public float[] getAccelerationVector() {
+        return accelerationVector;
+    }
+
     @Override
     public void onSensorChanged(SensorEvent event) {
         // In thisa example, alpha is calculated as t / (t + dT),
@@ -31,6 +37,10 @@ public class AccelerometerHandler implements SensorEventListener {
         linear_acceleration[2] = event.values[2] - gravity[2];
         String s = Float.toString(linear_acceleration[0]) + ", " + Float.toString(linear_acceleration[1]) + ", " + Float.toString(linear_acceleration[2]);
         Log.d("ElderAlarm", s);
+
+        accelerationVector = event.values;
+
+        Algorithms.accelerationChange();
     }
 
     @Override
