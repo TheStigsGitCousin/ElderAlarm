@@ -8,23 +8,23 @@ import android.util.Log;
  */
 public class Alarm {
 
-    private final String TAG="Alarm";
+    private final String TAG = "Alarm";
 
     Handler mHandler;
 
-    public void detectedFall(){
+    public void detectedFall() {
         startCancelationProcedure();
     }
 
-    public void detectedCardiacArrest(){
+    public void detectedCardiacArrest() {
         startCancelationProcedure();
     }
 
-    public void cancelAlarm(){
+    public void cancelAlarm() {
         startCancelationProcedure();
     }
 
-    public void startCountdown(){
+    public void startCountdown() {
         mHandler = new Handler();
         mHandler.postDelayed(mRunnable, 10000);
     }
@@ -39,7 +39,7 @@ public class Alarm {
         }
     };
 
-    private void startCancelationProcedure(){
+    private void startCancelationProcedure() {
         mHandler.removeCallbacks(mRunnable);
         Log.d(TAG, "ALARM CANCELED");
     }

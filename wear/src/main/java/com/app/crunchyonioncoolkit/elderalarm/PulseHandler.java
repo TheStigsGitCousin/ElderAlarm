@@ -14,14 +14,14 @@ public class PulseHandler implements SensorEventListener {
 
     private static float heartRate;
 
-    public float getHeartRate(){
+    public float getHeartRate() {
         return heartRate;
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
         float heartRate = event.values[0];
-        this.heartRate=heartRate;
+        this.heartRate = heartRate;
         Log.d(TAG, "heart rate: " + Float.toString(heartRate));
 
         Algorithms.pulseChange(heartRate);

@@ -23,7 +23,7 @@ import java.util.List;
 public class MainActivity extends Activity {
 
     private String TAG = "WEAR";
-
+    public static Context currentContext;
     //private TextView mTextView;
     // Accelerometer
     private SensorManager mSensorManager;
@@ -40,6 +40,7 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        currentContext = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.d("WEAR_CRUNCHY", "ON CREATE");

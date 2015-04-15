@@ -46,8 +46,16 @@ public class Constants {
     public static double FFI_MINIMUM_FALL_THRESHOLD = 0.6;
 
 
-    public static int MPI_SCORE=5;
-    public static int AAMV_SCORE=5;
+    public static int MPI_SCORE = 5;
+    public static int AAMV_SCORE = 5;
+    public static int MVI_SCORE = 5;
+    public static int PDI_SCORE = 5;
+    public static int ARI_SCORE = 5;
+    public static int FFI_SCORE = 5;
+
+    // Resualt treshold for decision maker to alarm
+    public static int RESUALT_TRESHOLD = 20;
+
 
 
 }
