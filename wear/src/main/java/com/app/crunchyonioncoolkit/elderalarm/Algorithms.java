@@ -4,7 +4,6 @@ package com.app.crunchyonioncoolkit.elderalarm;
  * Created by David on 2015-04-14.
  */
 public class Algorithms {
-
     public static int peakTime(double[] samples) {
         int samplesAfterPeak = 0;
         int peakTime = 0;
@@ -54,7 +53,7 @@ public class Algorithms {
         return samplesAfterImpact;
     }
 
-    public static int AAMV(double[] samples, int impactStart, int impactEnd) {
+    public static boolean AAMV(double[] samples, int impactStart, int impactEnd) {
         int middle = impactStart + ((impactEnd - impactStart) / 2);
         double sum = 0;
 
@@ -62,27 +61,22 @@ public class Algorithms {
             sum += (Math.abs(samples[i + 1] - samples[i]) / Constants.WIN_INTERVAL);
         }
 
-        if (sum > Constants.AAMV_THRESHOLD)
-            return Constants.AAMV_SCORE;
-        else
-            return 0;
+        return (sum > Constants.AAMV_THRESHOLD);
+
     }
 
     public static boolean ImpactDurationIndex(int impactStart, int impactEnd) {
         return ((impactEnd - impactStart) > Constants.IDI_THRESHOLD);
     }
 
-    public static int MaximumPeakIndex(double[] samples, int impactStart, int impactEnd) {
+    public static boolean MaximumPeakIndex(double[] samples, int impactStart, int impactEnd) {
         double maxAcceleration = samples[impactStart];
         for (int i = impactStart + 1; i <= impactEnd; i++) {
             if (samples[i] > maxAcceleration)
                 maxAcceleration = samples[i];
         }
 
-        if (maxAcceleration >= Constants.MAXIMUM_PEAK_THRESHOLD)
-            return Constants.MPI_SCORE;
-        else
-            return 0;
+        return (maxAcceleration >= Constants.MAXIMUM_PEAK_THRESHOLD);
 
     }
 
@@ -173,5 +167,4 @@ public class Algorithms {
 
         return samplesAfterImpact;
     }
-
 }

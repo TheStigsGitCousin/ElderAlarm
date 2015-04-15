@@ -5,6 +5,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 /**
  * Created by David on 2015-04-14.
  */
@@ -12,10 +14,24 @@ public class PulseHandler implements SensorEventListener {
 
     private final String TAG = "PulseHandler";
 
+    public static ArrayList<Event> listeners;
+
     private static float heartRate;
 
     public float getHeartRate() {
         return heartRate;
+    }
+
+    public static void addEventListener(Event event){
+        if(listeners==null)
+            listeners=new ArrayList<>();
+
+        listeners.add(event);
+    }
+
+    public static void removeEventListener(Event event){
+        if(listeners!=null)
+            listeners.remove(event);
     }
 
     @Override

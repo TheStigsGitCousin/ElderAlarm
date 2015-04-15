@@ -22,6 +22,8 @@ public class MainActivity extends Activity {
 
     private String TAG = "WEAR";
 
+    public static Context currentContext;
+
     private static final long CONNECTION_TIME_OUT_MS = 100;
     private static final String MESSAGE = "Hello Wear!";
     private GoogleApiClient client;
@@ -32,6 +34,9 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        currentContext = this;
+
         Log.d("WEAR_CRUNCHY", "ON CREATE");
         initApi();
 
