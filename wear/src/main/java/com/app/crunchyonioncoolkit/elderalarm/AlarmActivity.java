@@ -1,6 +1,7 @@
 package com.app.crunchyonioncoolkit.elderalarm;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,20 +9,28 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 
-public class AlarmActivity extends Activity implements Event{
+public class AlarmActivity extends Activity implements Event {
 
     private final String TAG = "AlarmActivity";
 
     Alarm alarm;
 
     Button cancelButton;
+    RelativeLayout pulseLayout;
+    TextView pulseTextview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm);
+
+        cancelButton.setVisibility(View.VISIBLE);
+        pulseLayout.setVisibility(View.GONE);
 
         cancelButton = (Button) findViewById(R.id.cancelButton);
         cancelButton.setOnLongClickListener(new View.OnLongClickListener() {
@@ -32,14 +41,19 @@ public class AlarmActivity extends Activity implements Event{
             }
         });
 
+        pulseLayout = (RelativeLayout) findViewById(R.id.pulse_layout);
+        pulseTextview = (TextView) findViewById(R.id.pulse_textView);
+
         Intent intent = getIntent();
         MyParcelable data = intent.getExtras().getParcelable("message");
         Log.d(TAG, "type: " + data.getType() + ", priority: " + Integer.toString(data.getPriority()));
 
-        PulseHandler.addEventListener(this);
+
+        Alarm.addEventListener(this);
 
         alarm = new Alarm();
         alarm.startCountdown();
+
     }
 
     private void cancelAlarm() {
@@ -76,7 +90,16 @@ public class AlarmActivity extends Activity implements Event{
     }
 
     @Override
-    public void onChange(float[] values) {
+    public void onChange(Result values) {
+        if (values.type.equals(PulseHandler.PULSE_EVENT)) {
+            Log.d(TAG, "pulse changed");
+            pulseTextview.setText(Float.toString(((float[]) values.value)[0]));
 
+        } else if (values.type.equals(Alarm.ALARM_EVENT)) {
+            Log.d(TAG, "alarm activated");
+            PulseHandler.addEventListener(this);
+            cancelButton.setVisibility(View.GONE);
+            pulseLayout.setVisibility(View.VISIBLE);
+        }
     }
 }
