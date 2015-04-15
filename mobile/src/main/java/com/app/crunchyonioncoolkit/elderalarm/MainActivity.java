@@ -16,6 +16,9 @@ public class MainActivity extends ActionBarActivity {
         //startService(new Intent(this, ListenerService.class));
 
         setContentView(R.layout.activity_main);
+
+        Intent serviceIntent = new Intent(this, BackgroundService.class);
+        startService(serviceIntent);
     }
 
 
