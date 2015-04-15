@@ -1,20 +1,26 @@
 package com.app.crunchyonioncoolkit.elderalarm;
 
+import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
 public class MainActivity extends ActionBarActivity {
 
+    public static Context currentContext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("MainActivity", "Starting");
         super.onCreate(savedInstanceState);
 
         //startService(new Intent(this, ListenerService.class));
 
+        currentContext = this;
         setContentView(R.layout.activity_main);
 
         Intent serviceIntent = new Intent(this, BackgroundService.class);

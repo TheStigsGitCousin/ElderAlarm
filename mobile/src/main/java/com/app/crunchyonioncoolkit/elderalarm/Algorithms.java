@@ -23,10 +23,10 @@ public class Algorithms {
         int samplesAfterImpact = -1;
         int startPoint = peakTime + Constants.IMPACT_END_INTERVAL;
 
-        if (startPoint > samples.length)
+        if (startPoint >= samples.length)
             return -1;
 
-        for (int i = startPoint; i >= peakTime; i--) {
+        for (int i = startPoint; i > peakTime; i--) {
             if (samples[i] >= Constants.IMPACT_END_MAGNITUDE_THRESHOLD) {
                 samplesAfterImpact = i;
                 break;
@@ -56,8 +56,12 @@ public class Algorithms {
     public static boolean AAMV(double[] samples, int impactStart, int impactEnd) {
         int middle = impactStart + ((impactEnd - impactStart) / 2);
         double sum = 0;
+        int halfInterval = (Constants.WIN_INTERVAL / 2);
+        if(halfInterval > middle || (halfInterval + middle) >= samples.length ){
+            return false;
+        }
 
-        for (int i = middle - (Constants.WIN_INTERVAL / 2); i <= middle + (Constants.WIN_INTERVAL / 2); i++) {
+        for (int i = middle - halfInterval; i <= middle + halfInterval; i++) {
             sum += (Math.abs(samples[i + 1] - samples[i]) / Constants.WIN_INTERVAL);
         }
 

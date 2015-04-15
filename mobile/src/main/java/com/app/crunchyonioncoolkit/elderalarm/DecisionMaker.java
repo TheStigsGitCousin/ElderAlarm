@@ -1,6 +1,5 @@
 package com.app.crunchyonioncoolkit.elderalarm;
 
-import android.content.Intent;
 import android.util.Log;
 
 /**
@@ -31,13 +30,24 @@ public class DecisionMaker {
 
     private static int allTests(double[] sample) {
         int peakTime = Algorithms.peakTime(sample);
+        Log.d("DecisionMaker", " PeakTime: " + Integer.toString(peakTime));
         if (peakTime == -1)
             return 0;
+        if (peakTime < Constants.WINDOW_WIDTH/6){
+            for(int i = 0; i < sample.length; i++){
+                DataOut.writeToFile(Double.toString(sample[i]), "SMV_Data.txt");
+            }
+            DataOut.writeToFile("1000", "SMV_Data.txt");
+        }
         int sum = 0;
         // impact end
         int impactEnd = Algorithms.impactEnd(sample, peakTime);
         // impact start
         int impactStart = Algorithms.impactStart(sample, impactEnd, peakTime);
+        Log.d("DecisionMaker","ImpactStart: " + Integer.toString(impactStart) + "   ImpactEnd: " + Integer.toString(impactEnd));
+        if(impactEnd < 0 || impactStart < 0){
+            return 0;
+        }
         // MPI
         sum += Algorithms.MaximumPeakIndex(sample, impactStart, impactEnd) ? Constants.MPI_SCORE : 0;
         Log.d("DecisionMaker", "MPI sum: "+Integer.toString(sum));
