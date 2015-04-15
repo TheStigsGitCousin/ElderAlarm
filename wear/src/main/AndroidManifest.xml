@@ -29,6 +29,8 @@
             android:name=".AlarmActivity"
             android:label="@string/title_activity_alarm" >
         </activity>
+
+        <service android:name=".BackgroundService"  />
     </application>
 
 </manifest>

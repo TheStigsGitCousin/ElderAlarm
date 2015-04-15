@@ -1,10 +1,5 @@
 package com.app.crunchyonioncoolkit.elderalarm;
 
-import java.util.LinkedList;
-import java.util.ListIterator;
-
-import javax.xml.datatype.Duration;
-
 /**
  * Created by David on 2015-04-14.
  */

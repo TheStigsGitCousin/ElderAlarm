@@ -3,8 +3,6 @@ package com.app.crunchyonioncoolkit.elderalarm;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.hardware.Sensor;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.wearable.view.WatchViewStub;
 import android.util.Log;
@@ -17,20 +15,12 @@ import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 
-import java.util.concurrent.TimeUnit;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends Activity {
 
     private String TAG = "WEAR";
-
-    //private TextView mTextView;
-    // Accelerometer
-    private SensorManager mSensorManager;
-    private Sensor accelerometerSensor;
-    private AccelerometerHandler accelerometerHandler;
-    private PulseHandler pulseHandler;
-    private Sensor pulseSensor;
 
     private static final long CONNECTION_TIME_OUT_MS = 100;
     private static final String MESSAGE = "Hello Wear!";
@@ -54,7 +44,9 @@ public class MainActivity extends Activity {
             }
         });
 
-        initializeSensors();
+
+        Intent serviceIntent = new Intent(this, BackgroundService.class);
+        startService(serviceIntent);
 
         Intent intent = new Intent(this, AlarmActivity.class);
         MyParcelable data = new MyParcelable(10, "cardiac arrest");
@@ -153,18 +145,4 @@ public class MainActivity extends Activity {
         }
     }
 
-
-    void initializeSensors() {
-
-        // Accelerometer
-        accelerometerHandler = new AccelerometerHandler();
-        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        accelerometerSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-
-        mSensorManager.registerListener(accelerometerHandler, accelerometerSensor, SensorManager.SENSOR_DELAY_FASTEST);
-
-        // Pulse
-        pulseSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
-        mSensorManager.registerListener(pulseHandler, pulseSensor, SensorManager.SENSOR_DELAY_FASTEST);
-    }
 }
