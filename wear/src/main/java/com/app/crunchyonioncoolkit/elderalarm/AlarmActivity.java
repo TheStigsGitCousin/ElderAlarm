@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.Button;
 
 
-public class AlarmActivity extends Activity {
+public class AlarmActivity extends Activity implements Event{
 
     private final String TAG = "AlarmActivity";
 
@@ -36,6 +36,8 @@ public class AlarmActivity extends Activity {
         MyParcelable data = intent.getExtras().getParcelable("message");
         Log.d(TAG, "type: " + data.getType() + ", priority: " + Integer.toString(data.getPriority()));
 
+        PulseHandler.addEventListener(this);
+
         alarm = new Alarm();
         alarm.startCountdown();
     }
@@ -53,6 +55,12 @@ public class AlarmActivity extends Activity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PulseHandler.removeEventListener(this);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -65,5 +73,10 @@ public class AlarmActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onChange(float[] values) {
+
     }
 }

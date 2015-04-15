@@ -40,7 +40,7 @@ public class AccelerometerHandler implements SensorEventListener {
 
         accelerationVector = event.values;
 
-        Algorithms.accelerationChange();
+        DecisionMaker.accelerationChange(accelerationVector);
     }
 
     @Override
