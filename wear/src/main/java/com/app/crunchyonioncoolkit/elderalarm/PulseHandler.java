@@ -13,14 +13,11 @@ import java.util.ArrayList;
 public class PulseHandler implements SensorEventListener {
 
     private final String TAG = "PulseHandler";
-
-    public static ArrayList<Event> listeners;
+    public static final String PULSE_EVENT="pulse";
 
     private static float heartRate;
 
-    public float getHeartRate() {
-        return heartRate;
-    }
+    public static ArrayList<Event> listeners;
 
     public static void addEventListener(Event event){
         if(listeners==null)
@@ -34,6 +31,12 @@ public class PulseHandler implements SensorEventListener {
             listeners.remove(event);
     }
 
+    public static void fireEvents(Result value){
+        for(Event event:listeners){
+            event.onChange(value);
+        }
+    }
+
     @Override
     public void onSensorChanged(SensorEvent event) {
         float heartRate = event.values[0];
@@ -41,7 +44,7 @@ public class PulseHandler implements SensorEventListener {
         Log.d(TAG, "heart rate: " + Float.toString(heartRate));
 
         DecisionMaker.pulseChange(heartRate);
-
+        fireEvents(new Result(PULSE_EVENT, event.values));
     }
 
     @Override
