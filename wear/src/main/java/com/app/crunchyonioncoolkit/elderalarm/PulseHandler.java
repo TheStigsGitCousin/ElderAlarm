@@ -13,26 +13,26 @@ import java.util.ArrayList;
 public class PulseHandler implements SensorEventListener {
 
     private final String TAG = "PulseHandler";
-    public static final String PULSE_EVENT="pulse";
+    public static final String PULSE_EVENT = "pulse";
 
     private static float heartRate;
 
     public static ArrayList<Event> listeners;
 
-    public static void addEventListener(Event event){
-        if(listeners==null)
-            listeners=new ArrayList<>();
+    public static void addEventListener(Event event) {
+        if (listeners == null)
+            listeners = new ArrayList<>();
 
         listeners.add(event);
     }
 
-    public static void removeEventListener(Event event){
-        if(listeners!=null)
+    public static void removeEventListener(Event event) {
+        if (listeners != null)
             listeners.remove(event);
     }
 
-    public static void fireEvents(Result value){
-        for(Event event:listeners){
+    public static void fireEvents(Result value) {
+        for (Event event : listeners) {
             event.onChange(value);
         }
     }

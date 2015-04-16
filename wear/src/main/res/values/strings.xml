@@ -10,7 +10,7 @@
     <string name="cancel_button_text">Hold to cancel alarm</string>
     <string name="pulse_info_text">Heart rate</string>
     <string name="pulse_start_value">0</string>
-    <string name="alarm_go_back_text">Hold here to go back</string>
+    <string name="alarm_go_back_text">Hold to go back</string>
 
 
 </resources>
