@@ -19,6 +19,10 @@ public class TestActivity extends Activity implements Event {
 
     Intent serviceIntent;
 
+    Date lastAcc;
+    Date lastGyr;
+    Date lastPul;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,21 +39,30 @@ public class TestActivity extends Activity implements Event {
         stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-stop();            }
+                stop();
+            }
         });
 
         serviceIntent = new Intent(this, BackgroundService.class);
+
+        Date now = new Date();
+        lastAcc = now;
+        lastGyr = now;
+        lastPul = now;
+
     }
 
-    void start(){
+    void start() {
         PulseHandler.addEventListener(this);
         AccelerometerHandler.addEventListener(this);
+        GyroscopeHandler.addEventListener(this);
         startService(serviceIntent);
     }
 
-    void stop(){
+    void stop() {
         PulseHandler.removeEventListener(this);
         AccelerometerHandler.removeEventListener(this);
+        GyroscopeHandler.removeEventListener(this);
         stopService(serviceIntent);
     }
 
@@ -79,11 +92,23 @@ stop();            }
     public void onChange(Result values) {
         if (values.type.equals(PulseHandler.PULSE_EVENT)) {
             // If pulse changed
-
+            if (PulseHandler.window.getWindow().getFirst().timeStamp.after(lastPul)) {
+                DataOut.simpleTestPrint(PulseHandler.window.getValueArray(), PulseHandler.window.getTimeStampArray(), "pulse");
+                lastPul = PulseHandler.window.getWindow().getLast().timeStamp;
+            }
 
         } else if (values.type.equals(AccelerometerHandler.ACCELERATION_EVENT)) {
             // If acceleration changed
-
+            if (AccelerometerHandler.window.getWindow().getFirst().timeStamp.after(lastPul)) {
+                DataOut.simpleTestPrint(AccelerometerHandler.window.getValueArray(), AccelerometerHandler.window.getTimeStampArray(), "acceleration");
+                lastAcc = PulseHandler.window.getWindow().getLast().timeStamp;
+            }
+        } else if (values.type.equals(GyroscopeHandler.GYROSCOPE_EVENT)) {
+            // If gyroscope changed
+            if (GyroscopeHandler.window.getWindow().getFirst().timeStamp.after(lastGyr)) {
+                DataOut.simpleTestPrint(GyroscopeHandler.window.getValueArray(), GyroscopeHandler.window.getTimeStampArray(), "gyroscope");
+                lastGyr = PulseHandler.window.getWindow().getLast().timeStamp;
+            }
         }
     }
 }
