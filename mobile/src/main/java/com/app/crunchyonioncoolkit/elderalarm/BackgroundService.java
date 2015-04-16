@@ -42,7 +42,7 @@ public class BackgroundService extends IntentService {
         accelerometerSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         mSensorManager.registerListener(accelerometerHandler, accelerometerSensor, SensorManager.SENSOR_DELAY_FASTEST);
 
-        // Gyroscope registration
+        // Gyroscope
         gyroscopeHandler = new GyroscopeHandler();
         mGyroscopeSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         mSensorManager.registerListener(gyroscopeHandler, accelerometerSensor, SensorManager.SENSOR_DELAY_FASTEST);
