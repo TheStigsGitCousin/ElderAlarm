@@ -1,15 +1,21 @@
 package com.app.crunchyonioncoolkit.elderalarm;
 
 import android.app.IntentService;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.os.Binder;
+import android.os.IBinder;
+import android.util.Log;
 
 /**
  * Created by David on 2015-04-15.
  */
-public class BackgroundService extends IntentService {
+public class BackgroundService extends Service {
+
+    private String TAG = "BackgroundService";
 
     // Accelerometer
     private SensorManager mSensorManager;
@@ -19,19 +25,29 @@ public class BackgroundService extends IntentService {
     private PulseHandler pulseHandler;
     private Sensor pulseSensor;
 
-
-    public BackgroundService() {
-        super("BackgroundService");
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
+    public void onCreate() {
+        super.onCreate();
+        Log.d(TAG, "onCreate");
         initializeSensors();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        super.onStartCommand(intent, flags, startId);
+        Log.d(TAG, "onStart");
+        return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d(TAG, "onDestroy");
         mSensorManager.unregisterListener(accelerometerHandler);
         mSensorManager.unregisterListener(pulseHandler);
     }
