@@ -17,13 +17,14 @@ public class BackgroundService extends Service {
 
     private String TAG = "BackgroundService";
 
+    private Sensor mSensor;
     // Accelerometer
     private SensorManager mSensorManager;
-    private Sensor accelerometerSensor;
     private AccelerometerHandler accelerometerHandler;
     // Pulse
     private PulseHandler pulseHandler;
-    private Sensor pulseSensor;
+    // Gyroscope
+    private GyroscopeHandler gyroscopeHandler;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -57,12 +58,17 @@ public class BackgroundService extends Service {
         // Accelerometer
         accelerometerHandler = new AccelerometerHandler();
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        accelerometerSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-        mSensorManager.registerListener(accelerometerHandler, accelerometerSensor, SensorManager.SENSOR_DELAY_FASTEST);
+        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        mSensorManager.registerListener(accelerometerHandler, mSensor, SensorManager.SENSOR_DELAY_FASTEST);
 
         // Pulse
         pulseHandler = new PulseHandler();
-        pulseSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
-        mSensorManager.registerListener(pulseHandler, pulseSensor, SensorManager.SENSOR_DELAY_FASTEST);
+        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
+        mSensorManager.registerListener(pulseHandler, mSensor, SensorManager.SENSOR_DELAY_FASTEST);
+
+        // Gyroscope
+        gyroscopeHandler = new GyroscopeHandler();
+        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        mSensorManager.registerListener(gyroscopeHandler, mSensor, SensorManager.SENSOR_DELAY_FASTEST);
     }
 }

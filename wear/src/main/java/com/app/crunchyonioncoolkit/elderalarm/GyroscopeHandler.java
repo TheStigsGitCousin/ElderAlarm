@@ -8,16 +8,15 @@ import android.util.Log;
 import java.util.ArrayList;
 
 /**
- * Created by David on 2015-04-14.
+ * Created by David on 2015-04-16.
  */
-public class PulseHandler implements SensorEventListener {
 
-    private final String TAG = "PulseHandler";
-    public static final String PULSE_EVENT = "pulse";
 
-    private static float heartRate;
+public class GyroscopeHandler implements SensorEventListener {
+
     public static SlidingWindow window = new SlidingWindow();
 
+    public static final String GYROSCOPE_EVENT = "gyroscope";
     public static ArrayList<Event> listeners;
 
     public static void addEventListener(Event event) {
@@ -38,11 +37,13 @@ public class PulseHandler implements SensorEventListener {
         }
     }
 
+
     @Override
     public void onSensorChanged(SensorEvent event) {
-        window.newValue(event.values[0]);
+        double SMV = Math.sqrt((event.values[0] * event.values[0]) + (event.values[1] * event.values[1]) + (event.values[2] * event.values[2]));
+        window.newValue(SMV);
 
-        fireEvents(new Result(PULSE_EVENT, event.values));
+        fireEvents(new Result(GYROSCOPE_EVENT, event.values));
     }
 
     @Override

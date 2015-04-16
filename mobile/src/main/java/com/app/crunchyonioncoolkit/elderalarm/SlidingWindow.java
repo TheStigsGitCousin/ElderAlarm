@@ -26,23 +26,6 @@ public class SlidingWindow {
         return window;
     }
 
-    public double[] getSamples(){
-
-
-    }
-
-    public double[] getArray(){
-
-        double[] array = new double[window.size()];
-        int i = 0;
-        for (Sample d : window) {
-            array[i] = d.value;
-            i++;
-        }
-        return array;
-
-    }
-
     public double[] getValueArray(){
 
         double[] array = new double[window.size()];
