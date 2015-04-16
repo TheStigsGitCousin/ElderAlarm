@@ -42,15 +42,6 @@ public class MainActivity extends Activity {
 
         initApi();
 
-        final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
-        stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
-            @Override
-            public void onLayoutInflated(WatchViewStub stub) {
-                //mTextView = (TextView) stub.findViewById(R.id.text);
-                setupWidgets();
-            }
-        });
-
         powerButton = (Button) findViewById(R.id.powerButton);
         powerButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -63,10 +54,10 @@ public class MainActivity extends Activity {
 
         serviceIntent = new Intent(this, BackgroundService.class);
 
-//        Intent intent = new Intent(this, AlarmActivity.class);
+        Intent intent = new Intent(this, TestActivity.class);
 //        MyParcelable data = new MyParcelable(10, "cardiac arrest");
 //        intent.putExtra("message", data);
-//        startActivity(intent);
+        startActivity(intent);
     }
 
     @Override
