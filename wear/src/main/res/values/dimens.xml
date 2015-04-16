@@ -5,5 +5,6 @@
 
     <dimen name="heart_rate_font_size">70sp</dimen>
     <dimen name="heart_rate_info_font_size">25sp</dimen>
+    <dimen name="alarm_go_back_font_size">17sp</dimen>
 
 </resources>
