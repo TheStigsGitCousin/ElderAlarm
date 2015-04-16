@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
-import android.util.Log;
 
 /**
  * Created by David on 2015-04-15.
@@ -16,6 +15,9 @@ public class BackgroundService extends IntentService {
     private SensorManager mSensorManager;
     private Sensor accelerometerSensor;
     private AccelerometerHandler accelerometerHandler;
+
+    private Sensor mGyroscopeSensor;
+    private GyroscopeHandler gyroscopeHandler;
 
     public BackgroundService() {
         super("BackgroundService");
@@ -29,15 +31,21 @@ public class BackgroundService extends IntentService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //mSensorManager.unregisterListener(accelerometerHandler);
+        mSensorManager.unregisterListener(accelerometerHandler);
     }
 
     void initializeSensors() {
-        Log.d("BackgroundService", "Starting Sensors");
+
         // Accelerometer
         accelerometerHandler = new AccelerometerHandler();
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accelerometerSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-        mSensorManager.registerListener(accelerometerHandler, accelerometerSensor, 5000000);
+        mSensorManager.registerListener(accelerometerHandler, accelerometerSensor, SensorManager.SENSOR_DELAY_FASTEST);
+
+        // Gyroscope
+        gyroscopeHandler = new GyroscopeHandler();
+        mGyroscopeSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        mSensorManager.registerListener(gyroscopeHandler, accelerometerSensor, SensorManager.SENSOR_DELAY_FASTEST);
+
     }
 }
