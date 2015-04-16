@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
+import java.util.Date;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -35,6 +36,23 @@ public class DataOut {
         catch (IOException e) {
             Log.e("Exception", "File write failed: " + e.toString());
         }
+    }
+    public static void simpleTestPrint(double [] Values, Date [] Date,String Path){
+        try {
+            FileOutputStream f = new FileOutputStream(getAlbumStorageDir(Path), true);
+            OutputStreamWriter pw = new OutputStreamWriter(f);
+            for(int i = 0; i<Values.length; i++){
+                pw.append(Values[i] + ";");
+                pw.append(Date[i] + "\n");
+
+            }
+            pw.close();
+            f.close();
+        }
+        catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
+
     }
 
 
