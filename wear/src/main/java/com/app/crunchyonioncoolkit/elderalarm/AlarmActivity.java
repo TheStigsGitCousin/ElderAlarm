@@ -2,14 +2,20 @@ package com.app.crunchyonioncoolkit.elderalarm;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextSwitcher;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -19,22 +25,22 @@ public class AlarmActivity extends Activity implements Event {
 
     private final String TAG = "AlarmActivity";
 
-    Alarm alarm;
-    Date lastPulseUpdate;
+    private Alarm alarm;
+    private Date lastPulseUpdate;
 
-    Button cancelButton;
-    Button gobackButton;
-    RelativeLayout pulseLayout;
-    TextView pulseTextview;
+    private Button cancelButton;
+    private Button gobackButton;
+    private RelativeLayout pulseLayout;
+    private TextView pulseTextview;
 
-    float[] count = {100, 0, 0};
+    private final int PULSE_UPDATE_FREQUENCY = 500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm);
 
-        lastPulseUpdate =new Date();
+        lastPulseUpdate = new Date();
 
         cancelButton = (Button) findViewById(R.id.cancelButton);
         cancelButton.setOnLongClickListener(new View.OnLongClickListener() {
@@ -59,14 +65,6 @@ public class AlarmActivity extends Activity implements Event {
                 goToMainActivity();
                 // Return true if the callback consumed the long click
                 return true;
-            }
-        });
-
-        gobackButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                count[0] += 5;
-                PulseHandler.fireEvents(new Result("pulse", count));
             }
         });
 
@@ -141,8 +139,8 @@ public class AlarmActivity extends Activity implements Event {
 
         if (values.type.equals(PulseHandler.PULSE_EVENT)) {
             // If pulse changed
-            Date currentTime=new Date();
-            if(getDateDiff(currentTime, lastPulseUpdate)>1000){
+            Date currentTime = new Date();
+            if (getDateDiff(lastPulseUpdate, currentTime) > PULSE_UPDATE_FREQUENCY) {
                 Log.d(TAG, "pulse changed: " + Float.toString(((float[]) values.value)[0]));
                 pulseTextview.setText(Float.toString(((float[]) values.value)[0]));
             }
@@ -163,6 +161,6 @@ public class AlarmActivity extends Activity implements Event {
 
     public static long getDateDiff(Date date1, Date date2) {
         long diffInMillies = date2.getTime() - date1.getTime();
-        return TimeUnit.SECONDS.convert(diffInMillies,TimeUnit.MILLISECONDS);
+        return TimeUnit.MILLISECONDS.convert(diffInMillies, TimeUnit.MILLISECONDS);
     }
 }

@@ -5,12 +5,36 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 /**
  * Created by David on 2015-04-02.
  */
 public class AccelerometerHandler implements SensorEventListener {
 
     private static float[] accelerationVector;
+
+    public static final String ACCELERATION_EVENT = "acceleration";
+
+    public static ArrayList<Event> listeners;
+
+    public static void addEventListener(Event event) {
+        if (listeners == null)
+            listeners = new ArrayList<>();
+
+        listeners.add(event);
+    }
+
+    public static void removeEventListener(Event event) {
+        if (listeners != null)
+            listeners.remove(event);
+    }
+
+    public static void fireEvents(Result value) {
+        for (Event event : listeners) {
+            event.onChange(value);
+        }
+    }
 
     public float[] getAccelerationVector() {
         return accelerationVector;

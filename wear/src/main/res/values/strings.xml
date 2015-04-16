@@ -12,5 +12,8 @@
     <string name="pulse_start_value">0</string>
     <string name="alarm_go_back_text">Hold to go back</string>
 
+    <string name="turn_on_button_text">Hold to turn ON</string>
+    <string name="turn_off_button_text">Hold to turn OFF</string>
+    <string name="title_activity_test">TestActivity</string>
 
 </resources>

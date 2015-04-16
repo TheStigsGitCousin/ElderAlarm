@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.wearable.view.WatchViewStub;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
@@ -20,15 +21,17 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends Activity {
 
-    private String TAG = "WEAR";
+    private String TAG = "MainActivity";
 
     public static Context currentContext;
+    private Intent serviceIntent;
 
     private static final long CONNECTION_TIME_OUT_MS = 100;
     private static final String MESSAGE = "Hello Wear!";
     private GoogleApiClient client;
     private String nodeId;
 
+    private Button powerButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +40,6 @@ public class MainActivity extends Activity {
 
         currentContext = this;
 
-        Log.d("WEAR_CRUNCHY", "ON CREATE");
         initApi();
 
         final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
@@ -49,23 +51,44 @@ public class MainActivity extends Activity {
             }
         });
 
+        powerButton = (Button) findViewById(R.id.powerButton);
+        powerButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                switchPowerState();
+                return true;
+            }
+        });
 
-        Intent serviceIntent = new Intent(this, BackgroundService.class);
-        startService(serviceIntent);
 
-        Intent intent = new Intent(this, AlarmActivity.class);
-        MyParcelable data = new MyParcelable(10, "cardiac arrest");
-        intent.putExtra("message", data);
-        startActivity(intent);
+        serviceIntent = new Intent(this, BackgroundService.class);
+
+//        Intent intent = new Intent(this, AlarmActivity.class);
+//        MyParcelable data = new MyParcelable(10, "cardiac arrest");
+//        intent.putExtra("message", data);
+//        startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    private void switchPowerState() {
+        if (powerButton.getText().equals(R.string.turn_on_button_text)) {
+            powerButton.setText(R.string.turn_off_button_text);
+            startService(serviceIntent);
+        } else if (powerButton.getText().equals(R.string.turn_off_button_text)) {
+            powerButton.setText(R.string.turn_on_button_text);
+            stopService(serviceIntent);
+        }
     }
 
     /**
      * Initializes the GoogleApiClient and gets the Node ID of the connected device.
      */
     private void initApi() {
-        Log.d("WEAR_CRUNCHY", "INITAPI");
         client = getGoogleApiClient(this);
-        Log.d("WEAR_CRUNCHY", "DEVICENODE");
         retrieveDeviceNode();
     }
 
@@ -101,22 +124,18 @@ public class MainActivity extends Activity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Log.d("WEAR_CRUNCHY", "RETRIEVE NODES");
                 client.connect();
-                Log.d("WEAR_CRUNCHY", "1");
                 NodeApi.GetConnectedNodesResult result =
                         Wearable.NodeApi.getConnectedNodes(client).await();
-                Log.d("WEAR_CRUNCHY", "2");
                 List<Node> nodes = result.getNodes();
-                Log.d("WEAR_CRUNCHY", "3");
                 if (nodes.size() > 0) {
                     nodeId = nodes.get(0).getId();
-                    Log.d("WEAR_CRUNCHY", "A NODE " + nodeId);
+                    Log.d(TAG, "NODE Id: " + nodeId);
 
                 } else {
-                    Log.d("WEAR_CRUNCHY", "NO NODES");
+                    Log.d(TAG, "NO NODES FOUND");
                 }
-                Log.d("WEAR_CRUNCHY", "4");
+                Log.d(TAG, "4");
             }
         }).start();
     }
@@ -125,8 +144,7 @@ public class MainActivity extends Activity {
      * Sends a message to the connected mobile device, telling it to show a Toast.
      */
     private void sendToast() {
-        Log.d("WEAR_CRUNCHY", "SEND TOAST");
-        Log.d("WEAR_CRUNCHY", "NODE ID" + nodeId);
+        Log.d(TAG, "NODE Id" + nodeId);
         if (nodeId != null) {
             new Thread(new Runnable() {
                 @Override
@@ -137,14 +155,14 @@ public class MainActivity extends Activity {
                                 @Override
                                 public void onResult(MessageApi.SendMessageResult sendMessageResult) {
                                     if (!sendMessageResult.getStatus().isSuccess()) {
-                                        Log.e("WEAR_CRUNCHY", "Failed to send message with status code: "
+                                        Log.e(TAG, "Failed to send message with status code: "
                                                 + sendMessageResult.getStatus().getStatusCode());
                                     }
                                 }
                             }
                     );
                     client.disconnect();
-                    Log.d("WEAR_CRUNCHY", "SENT MESSAGE");
+                    Log.d(TAG, "MESSAGE SENT");
                 }
             }).start();
         }

@@ -5,7 +5,11 @@
     <uses-feature android:name="android.hardware.type.watch" />
 
     <uses-permission android:name="android.permission.BODY_SENSORS" />
-    <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" />
+
+    <uses-feature
+        android:name="android.hardware.sensor.accelerometer"
+        android:required="true" />
+
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
@@ -31,7 +35,12 @@
             android:label="@string/title_activity_alarm" >
         </activity>
 
-        <service android:name=".BackgroundService"  />
+        <service android:name=".BackgroundService" />
+
+        <activity
+            android:name=".TestActivity"
+            android:label="@string/title_activity_test" >
+        </activity>
     </application>
 
 </manifest>
