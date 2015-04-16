@@ -54,7 +54,15 @@ public class Constants {
     public static int FFI_SCORE = 5;
 
     // Resualt treshold for decision maker to alarm
-    public static int RESUALT_TRESHOLD = 20;
+    public static int RESUALT_THRESHOLD = 20;
 
 
+
+    //Simple detection
+
+    //MPI Score for simple detection
+    public static int MPI_SIMPLE_SCORE = 5;
+    public static int MAXIMUM_GYROSCOPE_PEAK_THRESHOLD = 5;
+    public static int MGI_SIMPLE_SCORE = 5;
+    public static int FALL_SCORE_RESUALT_THRESHOLD = 10;
 }

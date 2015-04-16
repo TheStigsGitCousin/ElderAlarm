@@ -11,7 +11,7 @@ public class DecisionMaker {
 
     public static void accelerationChange(float[] acceleration) {
         double SMV = Math.sqrt((acceleration[0] * acceleration[0]) + (acceleration[1] * acceleration[1]) + (acceleration[2] * acceleration[2]));
-        Log.d("DecisionMaker", "New acceleration: "+Double.toString(SMV));
+        Log.d("DecisionMaker", "New acceleration: "+ Double.toString(SMV));
         window.newValue(SMV);
         fallDetection();
     }
@@ -22,7 +22,7 @@ public class DecisionMaker {
 
     private static void fallDetection() {
         int resualt = allTests(window.getArray());
-        if(resualt > Constants.RESUALT_TRESHOLD){
+        if(resualt > Constants.RESUALT_THRESHOLD){
             Log.d("DecisionMaker", "FALL DETECTED");
         }
     }

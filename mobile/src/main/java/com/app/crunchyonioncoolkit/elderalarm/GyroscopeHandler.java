@@ -8,10 +8,17 @@ import android.util.Log;
 /**
  * Created by David on 2015-04-16.
  */
+
+
 public class GyroscopeHandler implements SensorEventListener {
+
+    public static SlidingWindow window = new SlidingWindow();
+
     @Override
     public void onSensorChanged(SensorEvent event) {
         Log.d("GyroscopeHandler", "gyroscope change");
+        double SMV = Math.sqrt((event.values[0] * event.values[0]) + (event.values[1] * event.values[1]) + (event.values[2] * event.values[2]));
+        window.newValue(SMV);
     }
 
     @Override
