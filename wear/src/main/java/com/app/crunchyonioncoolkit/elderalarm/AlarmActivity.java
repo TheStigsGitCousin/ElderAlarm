@@ -2,20 +2,14 @@ package com.app.crunchyonioncoolkit.elderalarm;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.TextSwitcher;
 import android.widget.TextView;
-import android.widget.ViewSwitcher;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -29,9 +23,8 @@ public class AlarmActivity extends Activity implements Event {
     private Date lastPulseUpdate;
 
     private Button cancelButton;
-    private Button gobackButton;
     private RelativeLayout pulseLayout;
-    private TextView pulseTextview;
+    private TextView pulseTextView;
 
     private final int PULSE_UPDATE_FREQUENCY = 500;
 
@@ -55,9 +48,9 @@ public class AlarmActivity extends Activity implements Event {
         });
 
         pulseLayout = (RelativeLayout) findViewById(R.id.pulse_layout);
-        pulseTextview = (TextView) findViewById(R.id.pulse_textView);
+        pulseTextView = (TextView) findViewById(R.id.pulse_textView);
 
-        gobackButton = (Button) findViewById(R.id.gobackButton);
+        Button gobackButton = (Button) findViewById(R.id.gobackButton);
         gobackButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -142,7 +135,7 @@ public class AlarmActivity extends Activity implements Event {
             Date currentTime = new Date();
             if (getDateDiff(lastPulseUpdate, currentTime) > PULSE_UPDATE_FREQUENCY) {
                 Log.d(TAG, "pulse changed: " + Float.toString(((float[]) values.value)[0]));
-                pulseTextview.setText(Float.toString(((float[]) values.value)[0]));
+                pulseTextView.setText(Float.toString(((float[]) values.value)[0]));
             }
 
         } else if (values.type.equals(Alarm.ALARM_EVENT)) {

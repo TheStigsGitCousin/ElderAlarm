@@ -16,34 +16,11 @@ public class GyroscopeHandler implements SensorEventListener {
 
     public static SlidingWindow window = new SlidingWindow();
 
-    public static final String GYROSCOPE_EVENT = "gyroscope";
-    public static ArrayList<Event> listeners;
-
-    public static void addEventListener(Event event) {
-        if (listeners == null)
-            listeners = new ArrayList<>();
-
-        listeners.add(event);
-    }
-
-    public static void removeEventListener(Event event) {
-        if (listeners != null)
-            listeners.remove(event);
-    }
-
-    public static void fireEvents(Result value) {
-        for (Event event : listeners) {
-            event.onChange(value);
-        }
-    }
-
-
     @Override
     public void onSensorChanged(SensorEvent event) {
         double SMV = Math.sqrt((event.values[0] * event.values[0]) + (event.values[1] * event.values[1]) + (event.values[2] * event.values[2]));
         window.newValue(SMV);
 
-        fireEvents(new Result(GYROSCOPE_EVENT, event.values));
     }
 
     @Override

@@ -1,12 +1,10 @@
 package com.app.crunchyonioncoolkit.elderalarm;
 
-import android.app.IntentService;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
-import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -35,7 +33,23 @@ public class BackgroundService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "onCreate");
-        initializeSensors();
+
+        new Thread(new Runnable() {
+            public void run() {
+//        initializeSensors();
+                runForever();
+            }
+        }).start();
+    }
+
+    void runForever(){
+        int i = 0;
+        while (true) {
+            if (i == 100000000)
+                i = 0;
+
+            i++;
+        }
     }
 
     @Override
