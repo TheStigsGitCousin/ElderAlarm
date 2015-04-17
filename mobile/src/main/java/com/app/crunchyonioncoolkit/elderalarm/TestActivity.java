@@ -52,6 +52,7 @@ public class TestActivity extends Activity implements Event {
             @Override
             public void onClick(View v) {
                 Log.d("TestActivity", "STOP!!");
+                //Marks end of test, press Stop button
                 DataOut.writeToFile("STOP\n", "ACC.txt");
                 DataOut.writeToFile("STOP\n", "GYR.txt");
                 stop();
