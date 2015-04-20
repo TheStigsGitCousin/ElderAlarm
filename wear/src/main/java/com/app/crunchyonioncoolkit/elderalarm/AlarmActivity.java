@@ -83,6 +83,7 @@ public class AlarmActivity extends Activity implements Event {
 
     }
 
+    // Navigate to MainActivity
     private void goToMainActivity() {
         // Cancel pulse updates
         PulseHandler.removeEventListener(this);

@@ -61,7 +61,7 @@ public class DataOut {
         String ret = "";
 
         try {
-            InputStream inputStream = MainActivity.currentContext.openFileInput(path);
+            InputStream inputStream = MainActivity.currentContext.getAssets().open("");
 
             if (inputStream != null) {
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
