@@ -19,7 +19,14 @@ public class DecisionMakerSimple {
         Calendar peakTime = AlgorithmsSimple.peakTime(SMVArray, timeArray);
         if (peakTime == null)
             return false;
+        for(int i = 0; i < timeArray.length;i++){
 
+            if(timeArray[i] == peakTime){
+                Log.d(TAG, Double.toString(SMVArray[i]) + " " + Integer.toString(i));
+                break;
+            }
+
+        }
         Log.d(TAG, "Peak time (ms): " + Long.toString(peakTime.getTimeInMillis()));
         sum += AlgorithmsSimple.MPI(SMVArray) ? Constants.MPI_SIMPLE_SCORE : 0;
         // HeartRate
@@ -35,16 +42,26 @@ public class DecisionMakerSimple {
     }
 
     public static void TestAlgorithm() {
+
         String data = DataOut.readFromFile("ACC.txt");
+
         String[] array = data.split("\n");
+
         AccelerometerHandler accelerometerHandler = new AccelerometerHandler();
+
         String dataGyr = DataOut.readFromFile("GYR.txt");
+
         String[] arrayGyr = dataGyr.split("\n");
+
         String[] valueAndTime;
         for (int i = 0; i < array.length; i++) {
+            Log.d(TAG, Integer.toString(i));
             valueAndTime = array[i].split(";");
+
             accelerometerHandler.testChange(Double.parseDouble(valueAndTime[0]));
+
             valueAndTime = arrayGyr[i].split(";");
+
             GyroscopeHandler.window.newValue(Double.parseDouble(valueAndTime[0]));
             try {
                 Thread.sleep(10);
