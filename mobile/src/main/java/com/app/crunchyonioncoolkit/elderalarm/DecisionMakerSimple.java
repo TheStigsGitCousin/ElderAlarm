@@ -1,6 +1,8 @@
 package com.app.crunchyonioncoolkit.elderalarm;
 
 import android.util.Log;
+
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -18,7 +20,7 @@ public class DecisionMakerSimple {
 
     public static boolean detectFall(){
         double [] SMV = window.getValueArray();
-        Date [] Date = window.getTimeStampArray();
+        Calendar[] Date = window.getTimeStampArray();
         int sum = 0;
         sum += AlgorithmsSimple.MPI(SMV)? Constants.MPI_SIMPLE_SCORE:0;
         sum += AlgorithmsSimple.MGI(SMV)? Constants.MGI_SIMPLE_SCORE:0;
