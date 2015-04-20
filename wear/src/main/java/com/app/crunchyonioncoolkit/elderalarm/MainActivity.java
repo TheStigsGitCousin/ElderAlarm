@@ -42,14 +42,14 @@ public class MainActivity extends Activity {
 
         initApi();
 
-        /*final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
+        final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
         stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
             @Override
             public void onLayoutInflated(WatchViewStub stub) {
                 //mTextView = (TextView) stub.findViewById(R.id.text);
                 setupWidgets();
             }
-        });*/
+        });
 
         powerButton = (Button) findViewById(R.id.powerButton);
         powerButton.setOnLongClickListener(new View.OnLongClickListener() {

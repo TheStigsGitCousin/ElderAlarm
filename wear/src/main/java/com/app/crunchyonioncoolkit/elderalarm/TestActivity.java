@@ -12,8 +12,8 @@ import android.widget.Button;
 import java.util.Date;
 
 
-public class TestActivity extends Activity implements Event {
-
+public class TestActivity extends Activity  {
+/*
     Button startButton;
     Button stopButton;
 
@@ -52,19 +52,6 @@ public class TestActivity extends Activity implements Event {
 
     }
 
-    void start() {
-        PulseHandler.addEventListener(this);
-        AccelerometerHandler.addEventListener(this);
-        GyroscopeHandler.addEventListener(this);
-        startService(serviceIntent);
-    }
-
-    void stop() {
-        PulseHandler.removeEventListener(this);
-        AccelerometerHandler.removeEventListener(this);
-        GyroscopeHandler.removeEventListener(this);
-        stopService(serviceIntent);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -101,14 +88,14 @@ public class TestActivity extends Activity implements Event {
             // If acceleration changed
             if (AccelerometerHandler.window.getWindow().getFirst().timeStamp.after(lastPul)) {
                 DataOut.simpleTestPrint(AccelerometerHandler.window.getValueArray(), AccelerometerHandler.window.getTimeStampArray(), "acceleration");
-                lastAcc = PulseHandler.window.getWindow().getLast().timeStamp;
+                lastAcc = AccelerometerHandler.window.getWindow().getLast().timeStamp;
             }
         } else if (values.type.equals(GyroscopeHandler.GYROSCOPE_EVENT)) {
             // If gyroscope changed
             if (GyroscopeHandler.window.getWindow().getFirst().timeStamp.after(lastGyr)) {
                 DataOut.simpleTestPrint(GyroscopeHandler.window.getValueArray(), GyroscopeHandler.window.getTimeStampArray(), "gyroscope");
-                lastGyr = PulseHandler.window.getWindow().getLast().timeStamp;
+                lastGyr = GyroscopeHandler.window.getWindow().getLast().timeStamp;
             }
         }
-    }
+    }*/
 }
