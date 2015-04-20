@@ -1,5 +1,7 @@
 package com.app.crunchyonioncoolkit.elderalarm;
 
+import android.hardware.SensorEvent;
+import android.nfc.Tag;
 import android.util.Log;
 
 import java.util.Calendar;

@@ -12,7 +12,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by Jack on 2015-04-15.
@@ -57,12 +56,12 @@ public class DataOut {
     }
 
 
-    private String readFromFile() {
+    public static String readFromFile(String path) {
 
         String ret = "";
 
         try {
-            InputStream inputStream = MainActivity.currentContext.openFileInput("config.txt");
+            InputStream inputStream = MainActivity.currentContext.openFileInput(path);
 
             if (inputStream != null) {
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);

@@ -3,6 +3,7 @@ package com.app.crunchyonioncoolkit.elderalarm;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -15,8 +16,8 @@ public class PulseHandler implements SensorEventListener {
     private final String TAG = "PulseHandler";
     public static final String PULSE_EVENT = "pulse";
 
-    private static float heartRate;
     public static SlidingWindow window = new SlidingWindow();
+    private int accuracy = 0;
 
     public static ArrayList<Event> listeners;
 
@@ -40,13 +41,15 @@ public class PulseHandler implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        window.newValue(event.values[0]);
+        if (accuracy != SensorManager.SENSOR_STATUS_NO_CONTACT && accuracy != SensorManager.SENSOR_STATUS_UNRELIABLE) {
+            window.newValue(event.values[0]);
 
-        fireEvents(new Result(PULSE_EVENT, event.values));
+            fireEvents(new Result(PULSE_EVENT, event.values));
+        }
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
+        this.accuracy = accuracy;
     }
 }

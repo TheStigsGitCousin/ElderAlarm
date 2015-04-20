@@ -6,19 +6,19 @@ package com.app.crunchyonioncoolkit.elderalarm;
 public class Constants {
 
     // Threshold to determine peak time
-    public static double PEAK_TIME_THRESHOLD = 3;
+    public static double PEAK_TIME_THRESHOLD = 10;
     // Samples after peak when SMV < PEAK_TIME_THRESHOLD
-    public static int TIME_WITHOUT_PEAKS = 120;
-    // Number of samples in sliding window
-    public static int WINDOW_WIDTH = 200;
+    public static int TIME_WITHOUT_PEAKS = 2000;
+    // Sliding window time size (ms)
+    public static int WINDOW_WIDTH = 4000;
     // Interval to search for impact end
-    public static int IMPACT_END_INTERVAL = 50;
+    public static int IMPACT_END_INTERVAL = 25;
     // Magnitude of impact
-    public static double IMPACT_END_MAGNITUDE_THRESHOLD = 1.5;
+    public static double IMPACT_END_MAGNITUDE_THRESHOLD = 0.34;
     // Interval to search for impact start
-    public static int IMPACT_START_INTERVAL = 55;
+    public static int IMPACT_START_INTERVAL = 25;
     // Magnitude after impact
-    public static double IMPACT_START_LOW_THRESHOLD = 0.8;
+    public static double IMPACT_START_LOW_THRESHOLD = 0.34;
     // Win interval
     public static int WIN_INTERVAL = 40;
     //
@@ -54,7 +54,20 @@ public class Constants {
     public static int FFI_SCORE = 5;
 
     // Resualt treshold for decision maker to alarm
-    public static int RESUALT_TRESHOLD = 20;
+    public static int RESUALT_THRESHOLD = 20;
 
+
+
+    //Simple detection
+
+    //MPI Score for simple detection
+    public static int MPI_SIMPLE_SCORE = 5;
+    public static int MAXIMUM_GYROSCOPE_PEAK_THRESHOLD = 5;
+    public static int MGI_SIMPLE_SCORE = 5;
+    public static int FALL_SCORE_RESUALT_THRESHOLD = 10;
+
+    // Heart rate
+    public static double MINIMUM_PULSE_THRESHOLD = 1.15;
+    public static int MHRI_SIMPLE_SCORE= 10;
 
 }

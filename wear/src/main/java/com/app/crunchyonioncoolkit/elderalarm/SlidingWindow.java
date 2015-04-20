@@ -1,6 +1,6 @@
 package com.app.crunchyonioncoolkit.elderalarm;
 
-import java.util.Date;
+import java.util.Calendar;
 import java.util.LinkedList;
 
 /**
@@ -15,27 +15,15 @@ public class SlidingWindow {
     }
 
     public void newValue(double SMV) {
-        window.addLast(new Sample(SMV, new Date()));
+        window.addLast(new Sample(SMV, Calendar.getInstance()));
 
-        if (window.size() > Constants.WINDOW_WIDTH) {
+        if (window.getLast().timeStamp.getTimeInMillis() - window.getFirst().timeStamp.getTimeInMillis() > Constants.WINDOW_WIDTH) {
             window.removeFirst();
         }
     }
 
     public LinkedList<Sample> getWindow() {
         return window;
-    }
-
-    public double[] getArray(){
-
-        double[] array = new double[window.size()];
-        int i = 0;
-        for (Sample d : window) {
-            array[i] = d.value;
-            i++;
-        }
-        return array;
-
     }
 
     public double[] getValueArray(){
@@ -50,9 +38,9 @@ public class SlidingWindow {
 
     }
 
-    public Date[] getTimeStampArray(){
+    public Calendar[] getTimeStampArray(){
 
-        Date[] array = new Date[window.size()];
+        Calendar[] array = new Calendar[window.size()];
         int i = 0;
         for (Sample d : window) {
             array[i] = d.timeStamp;
@@ -64,8 +52,8 @@ public class SlidingWindow {
 
     public class Sample{
         public double value;
-        public Date timeStamp;
-        public Sample(double w, Date t){
+        public Calendar timeStamp;
+        public Sample(double w, Calendar t){
             value = w;
             timeStamp = t;
         }

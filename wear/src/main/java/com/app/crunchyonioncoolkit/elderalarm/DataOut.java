@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.Date;
+import java.util.Calendar;
 
 /**
  * Created by Jack on 2015-04-15.
@@ -20,7 +20,7 @@ public class DataOut {
     public static File getAlbumStorageDir(String albumName) {
         // Get the directory for the user's public pictures directory.
         File file = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DOCUMENTS), albumName);
+                Environment.DIRECTORY_PICTURES), albumName);
         return file;
     }
 
@@ -28,7 +28,9 @@ public class DataOut {
         try {
             FileOutputStream f = new FileOutputStream(getAlbumStorageDir(Path), true);
             OutputStreamWriter pw = new OutputStreamWriter(f);
-            pw.append(data + ";");
+            //Calendar.getInstance().getTime();
+            pw.append(data + ";" + Calendar.getInstance().getTimeInMillis() + "\n");
+
             pw.close();
             f.close();
         } catch (IOException e) {
@@ -36,13 +38,13 @@ public class DataOut {
         }
     }
 
-    public static void simpleTestPrint(double[] Values, Date[] Date, String Path) {
+    public static void simpleTestPrint(double[] Values, Calendar[] Date, String Path) {
         try {
             FileOutputStream f = new FileOutputStream(getAlbumStorageDir(Path), true);
             OutputStreamWriter pw = new OutputStreamWriter(f);
             for (int i = 0; i < Values.length; i++) {
                 pw.append(Values[i] + ";");
-                pw.append(Date[i] + "\n");
+                pw.append(Date[i].getTime() + "\n");
             }
             pw.append("0;0");
             pw.close();
@@ -54,12 +56,12 @@ public class DataOut {
     }
 
 
-    private String readFromFile() {
+    public static String readFromFile(String path) {
 
         String ret = "";
 
         try {
-            InputStream inputStream = MainActivity.currentContext.openFileInput("config.txt");
+            InputStream inputStream = MainActivity.currentContext.openFileInput(path);
 
             if (inputStream != null) {
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
