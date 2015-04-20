@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.wearable.view.WatchViewStub;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -40,6 +41,16 @@ public class MainActivity extends Activity {
         currentContext = this;
 
         initApi();
+
+        final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
+        stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
+            @Override
+            public void onLayoutInflated(WatchViewStub stub) {
+                //mTextView = (TextView) stub.findViewById(R.id.text);
+                setupWidgets();
+            }
+        });
+
         powerButton = (Button) findViewById(R.id.powerButton);
         powerButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -49,37 +60,28 @@ public class MainActivity extends Activity {
             }
         });
 
+
         serviceIntent = new Intent(this, BackgroundService.class);
 
-        Intent intent = new Intent(this, BluetoothActivity.class);
+//        Intent intent = new Intent(this, AlarmActivity.class);
 //        MyParcelable data = new MyParcelable(10, "cardiac arrest");
 //        intent.putExtra("message", data);
-        startActivity(intent);
-    }
-
-    private void switchPowerState() {
-        if (powerButton.getText().toString().equals(getString(R.string.turn_on_button_text))) {
-            powerButton.setText(getString(R.string.turn_off_button_text));
-            powerOn();
-        } else if (powerButton.getText().equals(getString(R.string.turn_off_button_text))) {
-            powerButton.setText(getString(R.string.turn_on_button_text));
-            powerOff();
-        }
-    }
-
-    void powerOn() {
-        startService(serviceIntent);
-
-    }
-
-    void powerOff() {
-        stopService(serviceIntent);
-
+//        startActivity(intent);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    private void switchPowerState() {
+        if (powerButton.getText().equals(R.string.turn_on_button_text)) {
+            powerButton.setText(R.string.turn_off_button_text);
+            startService(serviceIntent);
+        } else if (powerButton.getText().equals(R.string.turn_off_button_text)) {
+            powerButton.setText(R.string.turn_on_button_text);
+            stopService(serviceIntent);
+        }
     }
 
     /**
@@ -90,6 +92,17 @@ public class MainActivity extends Activity {
         retrieveDeviceNode();
     }
 
+    /**
+     * Sets up the button for handling click events.
+     */
+    private void setupWidgets() {
+        findViewById(R.id.btn_toast).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendToast();
+            }
+        });
+    }
 
     /**
      * Returns a GoogleApiClient that can access the Wear API.

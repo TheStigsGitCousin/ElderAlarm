@@ -21,7 +21,7 @@ public class DecisionMaker {
     }
 
     private static void fallDetection() {
-        int resualt = allTests(window.getArray());
+        int resualt = allTests(window.getValueArray());
         if(resualt > Constants.RESUALT_THRESHOLD){
             Log.d("DecisionMaker", "FALL DETECTED");
         }
