@@ -133,7 +133,6 @@ public class TestActivity extends Activity implements Event {
 
     @Override
     public void onChange(Result values) {
-        HTTPTask Task = new HTTPTask();
-        Task.execute(values);
+
     }
 }
