@@ -29,9 +29,7 @@ public class BluetoothActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth);
-
-        mHandler=new Handler();
-
+        mHandler = new Handler();
         initializeAdapter();
         scanLeDevice(true);
     }
@@ -56,7 +54,7 @@ public class BluetoothActivity extends Activity {
     // Stops scanning after 10 seconds.
     private static final long SCAN_PERIOD = 10000;
     private ArrayList<BluetoothDevice> mLeDevices = new ArrayList<>();
-    private static String BLE_DEVICE_NAME = "devicename";
+    private static String BLE_DEVICE_ADDRES = "00:6B:9E:06:0E:7D";
     BluetoothGatt bluetoothGatt;
 
     // Device scan callback.
@@ -85,7 +83,7 @@ public class BluetoothActivity extends Activity {
 
                     for (BluetoothDevice device : mLeDevices) {
                         Log.d(TAG, "device name: " + device.getName() + ", device address: " + device.getAddress());
-                        if (device.getName().equals(BLE_DEVICE_NAME)) {
+                        if (device.getAddress().equals(BLE_DEVICE_ADDRES)) {
                             bluetoothGatt = device.connectGatt(getApplicationContext(), false, btleGattCallback);
                             if (bluetoothGatt != null) {
                                 bluetoothGatt.discoverServices();
