@@ -51,9 +51,9 @@ public class MainActivity extends Activity {
 
         serviceIntent = new Intent(this, BackgroundService.class);
 
-        Intent intent = new Intent(this, BluetoothActivity.class);
-//        MyParcelable data = new MyParcelable(10, "cardiac arrest");
-//        intent.putExtra("message", data);
+        Intent intent = new Intent(this, AlarmActivity.class);
+        MyParcelable data = new MyParcelable(10, "cardiac arrest");
+        intent.putExtra("message", data);
         startActivity(intent);
     }
 
