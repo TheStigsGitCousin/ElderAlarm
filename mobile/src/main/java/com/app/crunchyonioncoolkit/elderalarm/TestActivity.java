@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.Calendar;
 import java.util.Date;
 
 
@@ -44,7 +45,11 @@ public class TestActivity extends Activity implements Event {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AccelerometerHandler.ACC_PATH = "ACC_" + Calendar.getInstance().getTime().toString() + ".txt";
+                GyroscopeHandler.GRY_PATH = "GRY_" + Calendar.getInstance().getTime().toString() + ".txt";
+
                 start();
+
             }
         });
         stopButton = (Button) findViewById(R.id.stop_button2);
@@ -53,9 +58,12 @@ public class TestActivity extends Activity implements Event {
             public void onClick(View v) {
                 Log.d("TestActivity", "STOP!!");
                 //Marks end of test, press Stop button
-                DataOut.writeToFile("STOP\n", "ACC.txt");
-                DataOut.writeToFile("STOP\n", "GYR.txt");
+                //DataOut.writeToFile(, "ACC.txt");
+                //DataOut.writeToFile(, "GYR.txt");
                 stop();
+                AccelerometerHandler.window = new SlidingWindow();
+                GyroscopeHandler.window = new SlidingWindow();
+                DecisionMakerSimple.TestAlgorithm();
             }
         });
 

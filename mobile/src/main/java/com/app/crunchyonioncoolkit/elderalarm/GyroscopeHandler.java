@@ -10,13 +10,14 @@ import android.hardware.SensorEventListener;
 
 
 public class GyroscopeHandler implements SensorEventListener {
-
+    public static String GRY_PATH;
     public static SlidingWindow window = new SlidingWindow();
 
     @Override
     public void onSensorChanged(SensorEvent event) {
         double SMV = Math.sqrt((event.values[0] * event.values[0]) + (event.values[1] * event.values[1]) + (event.values[2] * event.values[2]));
         window.newValue(SMV);
+        DataOut.writeToFile(Double.toString(SMV), GRY_PATH);
 
     }
 

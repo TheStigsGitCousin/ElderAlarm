@@ -57,7 +57,7 @@ public class BackgroundService extends Service {
         accelerometerHandler = new AccelerometerHandler();
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-        mSensorManager.registerListener(accelerometerHandler, mSensor, SensorManager.SENSOR_DELAY_FASTEST);
+        mSensorManager.registerListener(accelerometerHandler, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
 
         /*// Pulse
         pulseHandler = new PulseHandler();
@@ -67,6 +67,6 @@ public class BackgroundService extends Service {
         // Gyroscope
         gyroscopeHandler = new GyroscopeHandler();
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        mSensorManager.registerListener(gyroscopeHandler, mSensor, SensorManager.SENSOR_DELAY_FASTEST);
+        mSensorManager.registerListener(gyroscopeHandler, mSensor, 500);
     }
 }

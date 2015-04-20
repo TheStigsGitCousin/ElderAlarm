@@ -69,6 +69,16 @@ public class AlgorithmsSimple {
 
         return averageAfterFall / averageBeforeFall >= Constants.MINIMUM_PULSE_THRESHOLD ? true : false;
     }
+    //Cardiac Arrest Index
+    public static boolean CAI(double[] samples){
+        int tot = 0;
+        for(int i = 0; i < samples.length; i++){
+            if(samples[i] < Constants.CARDIAC_ARREST_LIMIT){
+                tot++;
+            }
+        }
+        return tot/samples.length > Constants.CARDIAC_ARREST_RATIO?true:false;
+    }
 
 }
 

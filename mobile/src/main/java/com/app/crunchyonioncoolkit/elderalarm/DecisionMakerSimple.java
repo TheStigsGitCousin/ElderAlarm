@@ -43,19 +43,19 @@ public class DecisionMakerSimple {
 
     public static void TestAlgorithm() {
 
-        String data = DataOut.readFromFile("ACC.txt");
+        String data = DataOut.readFromFile(AccelerometerHandler.ACC_PATH);
 
         String[] array = data.split("\n");
 
         AccelerometerHandler accelerometerHandler = new AccelerometerHandler();
 
-        String dataGyr = DataOut.readFromFile("GYR.txt");
+        String dataGyr = DataOut.readFromFile(GyroscopeHandler.GRY_PATH);
 
         String[] arrayGyr = dataGyr.split("\n");
 
         String[] valueAndTime;
         for (int i = 0; i < array.length; i++) {
-            Log.d(TAG, Integer.toString(i));
+            //Log.d(TAG, Integer.toString(i));
             valueAndTime = array[i].split(";");
 
             accelerometerHandler.testChange(Double.parseDouble(valueAndTime[0]));
