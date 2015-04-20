@@ -34,7 +34,7 @@ public class DecisionMakerSimple {
         return sum >= Constants.FALL_SCORE_RESUALT_THRESHOLD;
     }
 
-    public void TestAlgorithm() {
+    public static void TestAlgorithm() {
         String data = DataOut.readFromFile("ACC.txt");
         String[] array = data.split("\n");
         AccelerometerHandler accelerometerHandler = new AccelerometerHandler();

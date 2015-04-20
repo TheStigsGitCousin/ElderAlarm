@@ -23,8 +23,10 @@ public class MainActivity extends ActionBarActivity {
         currentContext = this;
         setContentView(R.layout.activity_main);
 
-        Intent serviceIntent = new Intent(this, BackgroundService.class);
-        startService(serviceIntent);
+//        Intent serviceIntent = new Intent(this, BackgroundService.class);
+//        startService(serviceIntent);
+
+        DecisionMakerSimple.TestAlgorithm();
     }
 
 
