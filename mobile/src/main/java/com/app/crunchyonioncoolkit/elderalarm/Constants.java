@@ -6,11 +6,11 @@ package com.app.crunchyonioncoolkit.elderalarm;
 public class Constants {
 
     // Threshold to determine peak time
-    public static double PEAK_TIME_THRESHOLD = 0.5;
+    public static double PEAK_TIME_THRESHOLD = 10;
     // Samples after peak when SMV < PEAK_TIME_THRESHOLD
-    public static int TIME_WITHOUT_PEAKS = 35;
-    // Number of samples in sliding window
-    public static int WINDOW_WIDTH = 200;
+    public static int TIME_WITHOUT_PEAKS = 2000;
+    // Sliding window time size (ms)
+    public static int WINDOW_WIDTH = 4000;
     // Interval to search for impact end
     public static int IMPACT_END_INTERVAL = 25;
     // Magnitude of impact
@@ -65,4 +65,9 @@ public class Constants {
     public static int MAXIMUM_GYROSCOPE_PEAK_THRESHOLD = 5;
     public static int MGI_SIMPLE_SCORE = 5;
     public static int FALL_SCORE_RESUALT_THRESHOLD = 10;
+
+    // Heart rate
+    public static double MINIMUM_PULSE_THRESHOLD = 1.15;
+    public static int MHRI_SIMPLE_SCORE= 10;
+
 }

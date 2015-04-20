@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -12,7 +13,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by Jack on 2015-04-15.
@@ -57,12 +57,12 @@ public class DataOut {
     }
 
 
-    private String readFromFile() {
+    public static String readFromFile(String path) {
 
         String ret = "";
 
         try {
-            InputStream inputStream = MainActivity.currentContext.openFileInput("config.txt");
+            FileInputStream inputStream = new FileInputStream(getAlbumStorageDir(path));
 
             if (inputStream != null) {
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
@@ -72,6 +72,7 @@ public class DataOut {
 
                 while ((receiveString = bufferedReader.readLine()) != null) {
                     stringBuilder.append(receiveString);
+                    stringBuilder.append("\n");
                 }
 
                 inputStream.close();
