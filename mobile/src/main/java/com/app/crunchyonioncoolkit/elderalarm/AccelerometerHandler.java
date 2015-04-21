@@ -12,6 +12,7 @@ public class AccelerometerHandler implements SensorEventListener {
     public static String ACC_PATH;
     public static SlidingWindow window = new SlidingWindow();
 
+
     @Override
     public void onSensorChanged(SensorEvent event) {
         double SMV = Math.sqrt((event.values[0] * event.values[0]) + (event.values[1] * event.values[1]) + (event.values[2] * event.values[2]));
