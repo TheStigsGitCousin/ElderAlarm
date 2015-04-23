@@ -30,7 +30,7 @@ public class BluetoothActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth);
 
-        mHandler=new Handler();
+        mHandler = new Handler();
 
         initializeAdapter();
         scanLeDevice(true);

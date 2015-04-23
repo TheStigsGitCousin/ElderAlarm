@@ -5,12 +5,12 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.util.Log;
 
-import java.util.ArrayList;
-
 /**
  * Created by David on 2015-04-02.
  */
 public class AccelerometerHandler implements SensorEventListener {
+
+    private final String TAG = "AccelerometerHandler";
 
     public static SlidingWindow window = new SlidingWindow();
 
@@ -19,7 +19,9 @@ public class AccelerometerHandler implements SensorEventListener {
         double SMV = Math.sqrt((event.values[0] * event.values[0]) + (event.values[1] * event.values[1]) + (event.values[2] * event.values[2]));
         window.newValue(SMV);
 
-        DecisionMakerSimple.detectFall();
+        Log.d(TAG, "Acceleration: " + Double.toString(SMV));
+        if (SMV > 3)
+            DecisionMaker.fallDetection();
     }
 
     @Override
@@ -27,7 +29,7 @@ public class AccelerometerHandler implements SensorEventListener {
 
     }
 
-    public void testChange(double SMV){
+    public void testChange(double SMV) {
         window.newValue(SMV);
 
         DecisionMakerSimple.detectFall();

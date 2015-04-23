@@ -1,7 +1,5 @@
 package com.app.crunchyonioncoolkit.elderalarm;
 
-import android.hardware.SensorEvent;
-import android.nfc.Tag;
 import android.util.Log;
 
 import java.util.Calendar;
@@ -24,10 +22,12 @@ public class DecisionMakerSimple {
 
         Log.d(TAG, "Peak time (ms): " + Long.toString(peakTime.getTimeInMillis()));
         sum += AlgorithmsSimple.MPI(SMVArray) ? Constants.MPI_SIMPLE_SCORE : 0;
+
+        sum += AlgorithmsSimple.SMA(SMVArray) ? Constants.SMA_SIMPLE_SCORE : 0;
         // HeartRate
-        //sum += AlgorithmsSimple.MHRI(, timeArray, peakTime) ? Constants.MHRI_SIMPLE_SCORE : 0;
+        //sum += AlgorithmsSimple.MHRI(PulseHandler.window.getValueArray(), PulseHandler.window.getTimeStampArray(), peakTime) ? Constants.MHRI_SIMPLE_SCORE : 0;
         // Gyroscope
-        sum += AlgorithmsSimple.MGI(GyroscopeHandler.window.getValueArray()) ? Constants.MGI_SIMPLE_SCORE : 0;
+        //sum += AlgorithmsSimple.MGI(GyroscopeHandler.window.getValueArray()) ? Constants.MGI_SIMPLE_SCORE : 0;
 
         Log.d(TAG, "Sum: " + Integer.toString(sum));
         if (sum >= Constants.FALL_SCORE_RESUALT_THRESHOLD) {

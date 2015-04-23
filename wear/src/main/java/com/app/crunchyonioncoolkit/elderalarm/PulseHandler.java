@@ -34,8 +34,11 @@ public class PulseHandler implements SensorEventListener {
     }
 
     public static void fireEvents(Result value) {
-        for (Event event : listeners) {
-            event.onChange(value);
+        if (listeners != null) {
+
+            for (Event event : listeners) {
+                event.onChange(value);
+            }
         }
     }
 
@@ -43,6 +46,12 @@ public class PulseHandler implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         if (accuracy != SensorManager.SENSOR_STATUS_NO_CONTACT && accuracy != SensorManager.SENSOR_STATUS_UNRELIABLE) {
             window.newValue(event.values[0]);
+
+//            Log.d(TAG, "---------------");
+//            for (int i=0;i<3;i++) {
+//                Log.d(TAG, "pulse: " + Float.toString(event.values[i]));//+", accuracy = "+Integer.toString(accuracy));
+//            }
+//            Log.d(TAG, "---------------");
 
             fireEvents(new Result(PULSE_EVENT, event.values));
         }

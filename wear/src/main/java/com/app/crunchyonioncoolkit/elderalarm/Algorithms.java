@@ -1,38 +1,50 @@
 package com.app.crunchyonioncoolkit.elderalarm;
 
+import android.util.Log;
+
+import java.util.Calendar;
+
 /**
  * Created by David on 2015-04-14.
  */
 public class Algorithms {
-    public static int peakTime(double[] samples) {
-        int samplesAfterPeak = 0;
-        int peakTime = 0;
+
+    private static final String TAG = "DecisionMaker";
+
+    private static int peakTimeIndex;
+    private static Calendar impactEndIndex;
+
+    public static Calendar peakTime(double[] samples, Calendar[] timeSamples) {
+        Calendar peakTime = timeSamples[timeSamples.length - 1];
         for (int i = 0; i < samples.length; i++) {
             if (samples[i] > Constants.PEAK_TIME_THRESHOLD) {
-                samplesAfterPeak = 0;
-                peakTime = i;
+                peakTime = timeSamples[i];
+                peakTimeIndex = i;
             }
-            samplesAfterPeak++;
         }
 
-        return samplesAfterPeak >= Constants.TIME_WITHOUT_PEAKS ? peakTime : -1;
+        return (timeSamples[timeSamples.length - 1].getTimeInMillis() - peakTime.getTimeInMillis()) >= Constants.TIME_WITHOUT_PEAKS ? peakTime : null;
     }
 
     // Calculate last significant impact with the ground
-    public static int impactEnd(double[] samples, int peakTime) {
+    public static int impactEnd(double[] samples, Calendar[] timeArray, Calendar peakTime) {
         int samplesAfterImpact = -1;
-        int startPoint = peakTime + Constants.IMPACT_END_INTERVAL;
+        Calendar startPoint = Calendar.getInstance();
+        startPoint.setTime(peakTime.getTime());
+        startPoint.add(Calendar.MILLISECOND, Constants.IMPACT_END_INTERVAL);
 
-        if (startPoint > samples.length)
+        if (startPoint.getTimeInMillis() > timeArray[timeArray.length - 1].getTimeInMillis())
             return -1;
 
-        for (int i = startPoint; i >= peakTime; i--) {
+
+        for (int i = peakTimeIndex; i < samples.length; i++) {
             if (samples[i] >= Constants.IMPACT_END_MAGNITUDE_THRESHOLD) {
                 samplesAfterImpact = i;
-                break;
+                impactEndIndex=timeArray[i];
             }
         }
 
+        Log.d(TAG, "Impact end: " + Integer.toString(samplesAfterImpact));
         return samplesAfterImpact;
     }
 
@@ -50,6 +62,8 @@ public class Algorithms {
             }
         }
 
+        Log.d(TAG, "Impact start: " + Integer.toString(samplesAfterImpact));
+
         return samplesAfterImpact;
     }
 
@@ -60,6 +74,7 @@ public class Algorithms {
         for (int i = middle - (Constants.WIN_INTERVAL / 2); i <= middle + (Constants.WIN_INTERVAL / 2); i++) {
             sum += (Math.abs(samples[i + 1] - samples[i]) / Constants.WIN_INTERVAL);
         }
+        Log.d(TAG, "AAMV: " + Double.toString(sum));
 
         return (sum > Constants.AAMV_THRESHOLD);
 
@@ -75,6 +90,7 @@ public class Algorithms {
             if (samples[i] > maxAcceleration)
                 maxAcceleration = samples[i];
         }
+        Log.d(TAG, "MPI: " + Double.toString(maxAcceleration));
 
         return (maxAcceleration >= Constants.MAXIMUM_PEAK_THRESHOLD);
 
@@ -86,13 +102,14 @@ public class Algorithms {
             if (samples[i] < minAcceleration)
                 minAcceleration = samples[i];
         }
+        Log.d(TAG, "MVI: " + Double.toString(minAcceleration));
 
         return (minAcceleration >= Constants.MVI_AVERAGE_MAGNITUDE_LOW && minAcceleration <= Constants.MVI_AVERAGE_MAGNITUDE_HIGH);
     }
 
     public static boolean PeakDurationIndex(double[] samples, int peakTime) {
         int PDI = PDIEnd(samples, peakTime) - PDIStart(samples, peakTime);
-
+        Log.d(TAG, "PDI: " + Integer.toString(PDI));
         return (PDI < Constants.PDI_MAGNITUDE);
     }
 
@@ -104,6 +121,7 @@ public class Algorithms {
                 count++;
         }
 
+        Log.d(TAG, "ARI: " + Double.toString(((count / Constants.ARI_INTERVAL))));
         return ((count / Constants.ARI_INTERVAL) > Constants.ARI_THRESHOLD);
     }
 
@@ -114,6 +132,7 @@ public class Algorithms {
 
         int start = end - Constants.FFI_INTERVAL;
         double average = average(samples, start, end);
+        Log.d(TAG, "FFI: " + Double.toString(average));
         return (average >= Constants.FFI_MINIMUM_FALL_THRESHOLD);
     }
 
