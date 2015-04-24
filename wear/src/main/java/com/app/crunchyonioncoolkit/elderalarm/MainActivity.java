@@ -25,6 +25,7 @@ public class MainActivity extends Activity {
     private String IS_ACTIVE = "isactive";
 
     public static Context currentContext;
+    public static Activity currentActivity;
     private Intent serviceIntent;
 
     private static final long CONNECTION_TIME_OUT_MS = 100;
@@ -40,8 +41,9 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         currentContext = this;
+        currentActivity =this;
 
-        initApi();
+//        initApi();
         powerButton = (Button) findViewById(R.id.powerButton);
         powerButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -55,16 +57,23 @@ public class MainActivity extends Activity {
 
         serviceIntent = new Intent(this, BackgroundService.class);
 
+//        startService(serviceIntent);
 //        Intent intent = new Intent(this, AlarmActivity.class);
 //        MyParcelable data = new MyParcelable(10, "cardiac arrest");
 //        intent.putExtra("message", data);
 //        startActivity(intent);
+
+//        startActivity(new Intent(this, BluetoothActivity.class));
+
+        startService(new Intent(this, BLEService.class));
+
+//        GattServer.startServer(this);
     }
 
-    private void setPowerState(){
-        if(isBackgroundActive()){
+    private void setPowerState() {
+        if (isBackgroundActive()) {
             powerButton.setText(getString(R.string.turn_off_button_text));
-        }else{
+        } else {
             powerButton.setText(getString(R.string.turn_on_button_text));
         }
     }
@@ -91,13 +100,13 @@ public class MainActivity extends Activity {
 
     }
 
-    boolean isBackgroundActive(){
+    boolean isBackgroundActive() {
         // Restore preferences
         SharedPreferences settings = getSharedPreferences(SETTINGS, 0);
         return settings.getBoolean(IS_ACTIVE, false);
     }
 
-    void setBackgroundActive(boolean isActive){
+    void setBackgroundActive(boolean isActive) {
         // We need an Editor object to make preference changes.
         // All objects are from android.context.Context
         SharedPreferences settings = getSharedPreferences(SETTINGS, 0);
@@ -111,6 +120,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        GattServer.stopServer();
     }
 
     /**

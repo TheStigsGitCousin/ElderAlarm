@@ -78,7 +78,7 @@ public class BackgroundService extends Service {
         // Pulse
         pulseHandler = new PulseHandler();
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
-//        mSensorManager.registerListener(pulseHandler, mSensor, SensorManager.SENSOR_DELAY_FASTEST);
+//        mSensorManager.registerListener(pulseHandler, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
 
         // Gyroscope
         gyroscopeHandler = new GyroscopeHandler();

@@ -55,7 +55,8 @@ public class Bluetooth {
     }
 
     private void onCreate() {
-        mHandler = new Handler();
+        if (mHandler == null)
+            mHandler = new Handler();
 
         initializeAdapter();
         scanLeDevice(true);

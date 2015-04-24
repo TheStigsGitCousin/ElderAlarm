@@ -41,7 +41,10 @@
         <service android:name=".BackgroundService">
 
         </service>
-
+        <activity
+            android:name=".BluetoothActivity"
+        android:label="title_activity_bluetooth" >
+        </activity>
     </application>
 
 </manifest>

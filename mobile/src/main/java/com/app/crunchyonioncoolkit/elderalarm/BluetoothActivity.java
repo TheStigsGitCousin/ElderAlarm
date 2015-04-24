@@ -14,24 +14,37 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 public class BluetoothActivity extends Activity {
 
-    private final String TAG = "BluetoothActivity";
+    private static final String TAG = "BluetoothActivity";
 
     private final int REQUEST_ENABLE_BT = 1337;
+
+    static TextView tv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth);
+        tv=(TextView)findViewById(R.id.textView);
         mHandler = new Handler();
         initializeAdapter();
-        scanLeDevice(true);
+        Button button = (Button) findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scanLeDevice(true);
+            }
+        });
     }
 
     public void initializeAdapter() {
@@ -39,7 +52,14 @@ public class BluetoothActivity extends Activity {
         final BluetoothManager bluetoothManager =
                 (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = bluetoothManager.getAdapter();
+        Set<BluetoothDevice> devices = mBluetoothAdapter.getBondedDevices();
+        for (BluetoothDevice dev : devices) {
+            if (dev.getAddress().equals("34:FC:EF:7C:5F:87")) {
+                dev.connectGatt(this, true, bluetoothCallback);
+            }
+            Log.d(TAG, "device: " + dev.getName() + ", " + dev.getAddress());
 
+        }
         // Ensures Bluetooth is available on the device and it is enabled. If not,
         // displays a dialog requesting user permission to enable Bluetooth.
         if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
@@ -47,6 +67,62 @@ public class BluetoothActivity extends Activity {
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
     }
+
+    private static final BluetoothGattCallback bluetoothCallback = new BluetoothGattCallback() {
+        @Override
+        public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+            super.onConnectionStateChange(gatt, status, newState);
+            Log.d(TAG, "ConnectionChange");
+            tv.setText("onConnectionStateChange");
+        }
+
+        @Override
+        public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+            super.onServicesDiscovered(gatt, status);
+            Log.d(TAG,"Services discovered");
+            tv.setText("onServicesDiscovered");
+        }
+
+        @Override
+        public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+            super.onCharacteristicRead(gatt, characteristic, status);
+        }
+
+        @Override
+        public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+            super.onCharacteristicWrite(gatt, characteristic, status);
+        }
+
+        @Override
+        public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+            super.onCharacteristicChanged(gatt, characteristic);
+        }
+
+        @Override
+        public void onDescriptorRead(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
+            super.onDescriptorRead(gatt, descriptor, status);
+        }
+
+        @Override
+        public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
+            super.onDescriptorWrite(gatt, descriptor, status);
+        }
+
+        @Override
+        public void onReliableWriteCompleted(BluetoothGatt gatt, int status) {
+            super.onReliableWriteCompleted(gatt, status);
+        }
+
+        @Override
+        public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
+            super.onReadRemoteRssi(gatt, rssi, status);
+        }
+
+        @Override
+        public void onMtuChanged(BluetoothGatt gatt, int mtu, int status) {
+            super.onMtuChanged(gatt, mtu, status);
+        }
+    };
 
     private BluetoothAdapter mBluetoothAdapter;
     private boolean mScanning;
@@ -73,6 +149,7 @@ public class BluetoothActivity extends Activity {
             };
 
     private void scanLeDevice(final boolean enable) {
+        Log.d(TAG, "scanLeDevice");
         if (enable) {
             // Stops scanning after a pre-defined scan period.
             mHandler.postDelayed(new Runnable() {
@@ -80,7 +157,7 @@ public class BluetoothActivity extends Activity {
                 public void run() {
                     mScanning = false;
                     mBluetoothAdapter.stopLeScan(mLeScanCallback);
-
+                    Log.d(TAG, "devices = " + mLeDevices.size());
                     for (BluetoothDevice device : mLeDevices) {
                         Log.d(TAG, "device name: " + device.getName() + ", device address: " + device.getAddress());
                         if (device.getAddress().equals(BLE_DEVICE_ADDRES)) {
@@ -99,6 +176,8 @@ public class BluetoothActivity extends Activity {
         } else {
             mScanning = false;
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
+            Log.d(TAG, "stop scanning");
+
         }
     }
 

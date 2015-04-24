@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +26,14 @@ public class BluetoothActivity extends Activity {
 
     private final int REQUEST_ENABLE_BT = 1337;
 
+    TextView tv;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth);
+
+        tv = (TextView) findViewById(R.id.textView);
 
         mHandler = new Handler();
 
@@ -84,6 +89,9 @@ public class BluetoothActivity extends Activity {
                     mBluetoothAdapter.stopLeScan(mLeScanCallback);
 
                     for (BluetoothDevice device : mLeDevices) {
+                        String s = tv.getText().toString() + "\n";
+                        s += "device name: " + device.getName() + ", device address: " + device.getAddress();
+                        tv.setText(s);
                         Log.d(TAG, "device name: " + device.getName() + ", device address: " + device.getAddress());
                         if (device.getName().equals(BLE_DEVICE_NAME)) {
                             bluetoothGatt = device.connectGatt(getApplicationContext(), false, btleGattCallback);
@@ -134,6 +142,9 @@ public class BluetoothActivity extends Activity {
                             //find descriptor UUID that matches Client Characteristic Configuration (0x2902)
                             // and then call setValue on that descriptor
                             Log.d(TAG, "descriptor: " + new String(descriptor.getValue()));
+                            String s = tv.getText().toString() + "\n";
+                            s += new String(descriptor.getValue());
+                            tv.setText(s);
                         }
                     }
                 }

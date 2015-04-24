@@ -52,6 +52,8 @@ public class Algorithms {
         int samplesAfterImpact = -1;
         int startPoint = impactEnd - Constants.IMPACT_START_INTERVAL;
 
+
+
         if (startPoint < 0)
             return -1;
 

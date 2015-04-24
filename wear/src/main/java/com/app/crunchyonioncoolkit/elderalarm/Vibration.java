@@ -21,7 +21,7 @@ public class Vibration {
             long[] pattern = new long[2];
             pattern[0] = WAIT_DURATION;
             pattern[1] = VIBRATION_DURATION;
-            vibrator.vibrate(pattern, 1);
+            vibrator.vibrate(pattern, 0);
         }
     }
 
