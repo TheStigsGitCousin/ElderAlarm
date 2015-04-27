@@ -21,7 +21,9 @@ public class GyroscopeHandler implements SensorEventListener {
         double SMV = Math.sqrt((event.values[0] * event.values[0]) + (event.values[1] * event.values[1]) + (event.values[2] * event.values[2]));
         window.newValue(SMV);
 
-        Log.d(TAG, "Gyroscope: " + Double.toString(SMV));
+//        Log.d(TAG, "Gyroscope: " + Double.toString(SMV));
+        DataOut.writeToFile(Double.toString(SMV),"GYR.txt");
+
 
     }
 

@@ -4,7 +4,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -54,6 +53,8 @@ public class PulseHandler implements SensorEventListener {
 //            Log.d(TAG, "---------------");
 
             fireEvents(new Result(PULSE_EVENT, event.values));
+            DataOut.writeToFile(Double.toString(event.values[0]), "PUL.txt");
+
         }
     }
 

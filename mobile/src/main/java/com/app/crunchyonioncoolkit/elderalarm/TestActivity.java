@@ -2,117 +2,73 @@ package com.app.crunchyonioncoolkit.elderalarm;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.hardware.Sensor;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.Toast;
 
-import java.util.Date;
 
+public class TestActivity extends Activity {
+    public static Context currentContext;
 
-public class TestActivity extends Activity implements Event {
-
-    Button startButton;
-    Button stopButton;
-
-    Intent serviceIntent;
-
-    Date lastAcc;
-    Date lastGyr;
-    Date lastPul;
-    private Sensor mSensor;
-    // Accelerometer
-    private SensorManager mSensorManager;
-    private AccelerometerHandler accelerometerHandler;
-    // Pulse
-    private PulseHandler pulseHandler;
-    // Gyroscope
-    private GyroscopeHandler gyroscopeHandler;
+    private Button button;
+    private EditText pathEditText;
+    private CheckBox checkBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        Log.d("MainActivity", "Starting");
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_test);
-        Log.d("TestActivity", "Starting");
-        startButton = (Button) findViewById(R.id.start_button);
-        startButton.setOnClickListener(new View.OnClickListener() {
+
+        button = (Button) findViewById(R.id.transfer_button);
+        button.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
-                start();
-            }
-        });
-        stopButton = (Button) findViewById(R.id.stop_button2);
-        stopButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("TestActivity", "STOP!!");
-                //Marks end of test, press Stop button
-                DataOut.writeToFile("STOP\n", "ACC.txt");
-                DataOut.writeToFile("STOP\n", "GYR.txt");
-                stop();
+            public boolean onLongClick(View v) {
+                transferFiles();
+                return true;
             }
         });
 
-        serviceIntent = new Intent(this, BackgroundService.class);
+        pathEditText = (EditText) findViewById(R.id.path_editText);
 
-        Date now = new Date();
-        lastAcc = now;
-        lastGyr = now;
-        lastPul = now;
-
+        checkBox=(CheckBox)findViewById(R.id.mobile_transfered_checkBox);
+        currentContext = this;
 
     }
-    void initializeSensors() {
 
-        // Accelerometer
-        accelerometerHandler = new AccelerometerHandler();
-        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-        mSensorManager.registerListener(accelerometerHandler, mSensor, 500000000);
-
-        /*// Pulse
-        pulseHandler = new PulseHandler();
-        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
-        mSensorManager.registerListener(pulseHandler, mSensor, SensorManager.SENSOR_DELAY_FASTEST);
-*/
-        // Gyroscope
-        gyroscopeHandler = new GyroscopeHandler();
-        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        mSensorManager.registerListener(gyroscopeHandler, mSensor, 500000000);
-    }
-    void start() {
-
-        initializeSensors();
-    }
-
-    void stop() {
-        if (mSensorManager != null) {
-            mSensorManager.unregisterListener(accelerometerHandler);
-            mSensorManager.unregisterListener(pulseHandler);
-            mSensorManager.unregisterListener(gyroscopeHandler);
+    void transferFiles() {
+        String path = pathEditText.getText().toString() + ".txt";
+        if (path == "") {
+            showToast("NO PATH ENTERED");
+            return;
         }
+        DataOut.writeToFile(DataOut.readFromFile("ACC.txt"),  path+"_ACC");
+        DataOut.writeToFile(DataOut.readFromFile("GYR.txt"), path+"_GYR");
+        DataOut.writeToFile(DataOut.readFromFile("PUL.txt"), path+"_PUL");
+
+        DataOut.deleteFile("ACC.txt");
+        DataOut.deleteFile("GYR.txt");
+        DataOut.deleteFile("PUL.txt");
+
+        checkBox.setSelected(true);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (mSensorManager != null) {
-            mSensorManager.unregisterListener(accelerometerHandler);
-            mSensorManager.unregisterListener(pulseHandler);
-            mSensorManager.unregisterListener(gyroscopeHandler);
-        }
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_test, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -129,10 +85,5 @@ public class TestActivity extends Activity implements Event {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onChange(Result values) {
-
     }
 }
