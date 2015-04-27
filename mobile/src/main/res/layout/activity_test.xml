@@ -27,12 +27,12 @@
         android:layout_below="@+id/path_editText"
         android:layout_centerHorizontal="true" />
 
-    <CheckBox
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Transfered"
-        android:id="@+id/mobile_transfered_checkBox"
+        android:text=""
+        android:id="@+id/transferred_textView"
         android:layout_below="@+id/path_editText"
-        android:layout_centerHorizontal="true"
-        android:enabled="false"/>
+        android:layout_alignStart="@+id/transfer_button" />
+
 </RelativeLayout>

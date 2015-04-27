@@ -29,11 +29,13 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="26dp" />
 
-    <CheckBox
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Data sent"
-        android:id="@+id/checkBox"
+        android:text="Not transferred"
+        android:id="@+id/transfer_textView"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
+
+
 </RelativeLayout>

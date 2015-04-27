@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
+import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -35,13 +35,14 @@ public class TestActivity extends Activity {
     private Intent serviceIntent;
 
     private static final long CONNECTION_TIME_OUT_MS = 100;
-    private static final String MESSAGE = "Hello Wear!";
+    private static final String MESSAGE = "transferred";
     private GoogleApiClient mGoogleApiClient;
     private String nodeId;
 
     private Button powerButton;
     private Button sendButton;
-    private CheckBox checkBox;
+    private TextView transferTextView;
+
     private static final String DATA_KEY = "com.example.key.data";
     boolean isActive = false;
 
@@ -55,8 +56,7 @@ public class TestActivity extends Activity {
 
         initApi();
 
-        checkBox=(CheckBox)findViewById(R.id.checkBox);
-        checkBox.setEnabled(false);
+        transferTextView =(TextView)findViewById(R.id.transfer_textView);
 
         powerButton = (Button) findViewById(R.id.powerButton);
         powerButton.setOnLongClickListener(new View.OnLongClickListener() {
@@ -100,7 +100,9 @@ public class TestActivity extends Activity {
             DataOut.deleteFile("ACC.txt");
             DataOut.deleteFile("GYR.txt");
             DataOut.deleteFile("PUL.txt");
-            checkBox.setSelected(false);
+
+            transferTextView.setText("Not transferred");
+
             setBackgroundActive(true);
         } else {
             powerButton.setText(getString(R.string.turn_on_button_text));
@@ -156,6 +158,9 @@ public class TestActivity extends Activity {
         for(String s : SendData.getPulseData()){
             sendData("PUL",s);
         }
+
+        transferTextView.setText("Transferred");
+        sendEndMessage();
 
     }
 
@@ -217,7 +222,7 @@ public class TestActivity extends Activity {
     /**
      * Sends a message to the connected mobile device, telling it to show a Toast.
      */
-    private void sendToast() {
+    private void sendEndMessage() {
         Log.d(TAG, "NODE Id" + nodeId);
         if (nodeId != null) {
             new Thread(new Runnable() {
