@@ -1,5 +1,7 @@
 package com.app.crunchyonioncoolkit.elderalarm;
 
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -46,6 +48,11 @@ public class ListenerService extends WearableListenerService implements DataApi.
                 String data = dataMap.getString(DATA_KEY);
                 DataOut.writeToFile(data, path);
 //                showToast("Path: " + path + ", data: " + data);
+                Log.d(TAG, "dataChanged");
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_SEND);
+                intent.putExtra("message", "receive");
+                LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
             }
         }
     }
@@ -55,10 +62,13 @@ public class ListenerService extends WearableListenerService implements DataApi.
         Log.d(TAG, "MESSAGE RECEIVED");
         String path = messageEvent.getPath();
         Log.d(TAG, "MESSAGE: " + path);
-        if (path == "NEWDATA") {
+        if (path.equals("NEWDATA")) {
             Position.startLocationTracking(this);
-        } else if (path == "") {
-
+        } else if (path.equals("transferred")) {
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_SEND);
+            intent.putExtra("message", "done");
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         }
         showToast(path);
     }
