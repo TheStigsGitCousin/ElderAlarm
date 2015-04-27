@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -61,7 +62,7 @@ public class DataOut {
         String ret = "";
 
         try {
-            InputStream inputStream = MainActivity.currentContext.getAssets().open("");
+            FileInputStream inputStream = new FileInputStream(getAlbumStorageDir(path));
 
             if (inputStream != null) {
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
@@ -71,6 +72,7 @@ public class DataOut {
 
                 while ((receiveString = bufferedReader.readLine()) != null) {
                     stringBuilder.append(receiveString);
+                    stringBuilder.append("\n");
                 }
 
                 inputStream.close();
