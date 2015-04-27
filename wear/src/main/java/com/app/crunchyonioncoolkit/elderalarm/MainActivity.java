@@ -3,8 +3,8 @@ package com.app.crunchyonioncoolkit.elderalarm;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.wearable.view.WatchViewStub;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,8 +21,11 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends Activity {
     private String TAG = "MainActivity";
+    private String SETTINGS = "settings";
+    private String IS_ACTIVE = "isactive";
 
     public static Context currentContext;
+    public static Activity currentActivity;
     private Intent serviceIntent;
 
     private static final long CONNECTION_TIME_OUT_MS = 100;
@@ -38,8 +41,9 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         currentContext = this;
+        currentActivity =this;
 
-        initApi();
+//        initApi();
         powerButton = (Button) findViewById(R.id.powerButton);
         powerButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -49,21 +53,40 @@ public class MainActivity extends Activity {
             }
         });
 
+        setPowerState();
+
         serviceIntent = new Intent(this, BackgroundService.class);
 
-        Intent intent = new Intent(this, BluetoothActivity.class);
+//        startService(serviceIntent);
+//        Intent intent = new Intent(this, AlarmActivity.class);
 //        MyParcelable data = new MyParcelable(10, "cardiac arrest");
 //        intent.putExtra("message", data);
-        startActivity(intent);
+//        startActivity(intent);
+
+//        startActivity(new Intent(this, BluetoothActivity.class));
+
+        startService(new Intent(this, BLEService.class));
+
+//        GattServer.startServer(this);
+    }
+
+    private void setPowerState() {
+        if (isBackgroundActive()) {
+            powerButton.setText(getString(R.string.turn_off_button_text));
+        } else {
+            powerButton.setText(getString(R.string.turn_on_button_text));
+        }
     }
 
     private void switchPowerState() {
         if (powerButton.getText().toString().equals(getString(R.string.turn_on_button_text))) {
             powerButton.setText(getString(R.string.turn_off_button_text));
             powerOn();
+            setBackgroundActive(true);
         } else if (powerButton.getText().equals(getString(R.string.turn_off_button_text))) {
             powerButton.setText(getString(R.string.turn_on_button_text));
             powerOff();
+            setBackgroundActive(false);
         }
     }
 
@@ -77,9 +100,27 @@ public class MainActivity extends Activity {
 
     }
 
+    boolean isBackgroundActive() {
+        // Restore preferences
+        SharedPreferences settings = getSharedPreferences(SETTINGS, 0);
+        return settings.getBoolean(IS_ACTIVE, false);
+    }
+
+    void setBackgroundActive(boolean isActive) {
+        // We need an Editor object to make preference changes.
+        // All objects are from android.context.Context
+        SharedPreferences settings = getSharedPreferences(SETTINGS, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean(IS_ACTIVE, isActive);
+
+        // Commit the edits!
+        editor.commit();
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        GattServer.stopServer();
     }
 
     /**

@@ -11,10 +11,10 @@ import java.util.ArrayList;
 public class Alarm {
 
     private final String TAG = "Alarm";
-    public static final String ALARM_EVENT="alarm";
+    public static final String ALARM_EVENT = "alarm";
 
     Handler mHandler;
-    private int cancelationTime=10000;
+    private int cancelationTime = 10000;
 
     public static ArrayList<Event> listeners;
 

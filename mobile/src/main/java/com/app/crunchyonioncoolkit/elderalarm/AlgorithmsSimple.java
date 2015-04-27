@@ -29,6 +29,10 @@ public class AlgorithmsSimple {
                 CurrentPeak = samples[i];
             }
         }
+
+        if (CurrentPeak > 0)
+            Log.d(TAG, "Current peak: " + Double.toString(CurrentPeak));
+
         return CurrentPeak > 0;
     }
 
@@ -65,7 +69,7 @@ public class AlgorithmsSimple {
 
         averageAfterFall = averageAfterFall / (timeSamples.length - num);
 
-        Log.d(TAG,"MHRI average: "+Double.toString(averageAfterFall / averageBeforeFall));
+        Log.d(TAG, "MHRI average: " + Double.toString(averageAfterFall / averageBeforeFall));
 
         return averageAfterFall / averageBeforeFall >= Constants.MINIMUM_PULSE_THRESHOLD ? true : false;
     }

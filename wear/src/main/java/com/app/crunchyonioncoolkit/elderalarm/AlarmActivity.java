@@ -2,6 +2,7 @@ package com.app.crunchyonioncoolkit.elderalarm;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -18,9 +19,12 @@ import java.util.concurrent.TimeUnit;
 public class AlarmActivity extends Activity implements Event {
 
     private final String TAG = "AlarmActivity";
+    private String SETTINGS = "settings";
+    private String IS_ACTIVE = "alarmisactive";
 
     private Alarm alarm;
     private Date lastPulseUpdate;
+    private Bluetooth bluetooth;
 
     private Button cancelButton;
     private RelativeLayout pulseLayout;
@@ -33,6 +37,7 @@ public class AlarmActivity extends Activity implements Event {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm);
 
+        bluetooth = new Bluetooth(this);
         lastPulseUpdate = new Date();
 
         cancelButton = (Button) findViewById(R.id.cancelButton);
@@ -81,10 +86,35 @@ public class AlarmActivity extends Activity implements Event {
         // Start vibration
         Vibration.startVibration(this);
 
+        bluetooth.startBluetooth();
+
+        Log.d(TAG,"onCreate");
+
     }
 
+    void setStartState(){
+
+    }
+    boolean isBackgroundActive(){
+        // Restore preferences
+        SharedPreferences settings = getSharedPreferences(SETTINGS, 0);
+        return settings.getBoolean(IS_ACTIVE, false);
+    }
+
+    void setBackgroundActive(boolean isActive){
+        // We need an Editor object to make preference changes.
+        // All objects are from android.context.Context
+        SharedPreferences settings = getSharedPreferences(SETTINGS, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean(IS_ACTIVE, isActive);
+
+        // Commit the edits!
+        editor.commit();
+    }
     // Navigate to MainActivity
     private void goToMainActivity() {
+        // Disconnect potential bluetooth connection
+        bluetooth.stopBluetooth();
         // Cancel pulse updates
         PulseHandler.removeEventListener(this);
 

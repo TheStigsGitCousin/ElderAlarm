@@ -5,8 +5,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.util.Log;
 
-import java.util.ArrayList;
-
 /**
  * Created by David on 2015-04-16.
  */
@@ -14,12 +12,16 @@ import java.util.ArrayList;
 
 public class GyroscopeHandler implements SensorEventListener {
 
+    private final String TAG = "GyroscopeHandler";
+
     public static SlidingWindow window = new SlidingWindow();
 
     @Override
     public void onSensorChanged(SensorEvent event) {
         double SMV = Math.sqrt((event.values[0] * event.values[0]) + (event.values[1] * event.values[1]) + (event.values[2] * event.values[2]));
         window.newValue(SMV);
+
+        Log.d(TAG, "Gyroscope: " + Double.toString(SMV));
 
     }
 

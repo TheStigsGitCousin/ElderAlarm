@@ -32,6 +32,15 @@ public class AlgorithmsSimple {
         return CurrentPeak > 0;
     }
 
+    public static boolean SMA(double[] samples) {
+        double sum = 0;
+        for (double d : samples) {
+            sum += d;
+        }
+        Log.d(TAG, "SMA: " + sum);
+        return sum > Constants.SMA_THRESHOLD ? true : false;
+    }
+
     // Maximum Gyroscope Index
     public static boolean MGI(double[] samples) {
         double CurrentPeak = 0;
@@ -65,7 +74,7 @@ public class AlgorithmsSimple {
 
         averageAfterFall = averageAfterFall / (timeSamples.length - num);
 
-        Log.d(TAG,"MHRI average: "+Double.toString(averageAfterFall / averageBeforeFall));
+        Log.d(TAG, "MHRI average: " + Double.toString(averageAfterFall / averageBeforeFall));
 
         return averageAfterFall / averageBeforeFall >= Constants.MINIMUM_PULSE_THRESHOLD ? true : false;
     }

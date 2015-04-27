@@ -8,8 +8,8 @@ public class Result {
     public String type;
     public Object value;
 
-    public Result(String type, Object value){
-        this.type=type;
-        this.value=value;
+    public Result(String type, Object value) {
+        this.type = type;
+        this.value = value;
     }
 }
