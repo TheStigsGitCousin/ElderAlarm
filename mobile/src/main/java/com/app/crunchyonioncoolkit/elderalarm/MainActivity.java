@@ -25,7 +25,7 @@ public class MainActivity extends ActionBarActivity {
 
 //        Intent serviceIntent = new Intent(this, BackgroundService.class);
 //        startService(serviceIntent);
-        startActivity(new Intent(this, BluetoothActivity.class));
+        startActivity(new Intent(this, TestActivity.class));
 //        GattServer.startServer(this);
 //        DecisionMakerSimple.TestAlgorithm();
     }

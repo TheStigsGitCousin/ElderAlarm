@@ -65,11 +65,12 @@ public class BackgroundService extends Service {
 
     void initializeSensors() {
 
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
         // Accelerometer
         accelerometerHandler = new AccelerometerHandler();
-        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-        mSensorManager.registerListener(accelerometerHandler, mSensor, SensorManager.SENSOR_DELAY_GAME);
+        mSensorManager.registerListener(accelerometerHandler, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
 
 //        for(Sensor sensor:mSensorManager.getSensorList(Sensor.TYPE_ALL)){
 //            Log.d(TAG,"Sensor: "+sensor.getName()+", "+sensor.getStringType()+", "+sensor.getVendor()+", "+sensor.getResolution()+", "+sensor.getType()+", "+sensor.getVersion()+", "+sensor.getPower()+", "+sensor.getReportingMode());
@@ -78,11 +79,11 @@ public class BackgroundService extends Service {
         // Pulse
         pulseHandler = new PulseHandler();
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
-//        mSensorManager.registerListener(pulseHandler, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(pulseHandler, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
 
         // Gyroscope
         gyroscopeHandler = new GyroscopeHandler();
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-  //      mSensorManager.registerListener(gyroscopeHandler, mSensor, SensorManager.SENSOR_DELAY_FASTEST);
+        mSensorManager.registerListener(gyroscopeHandler, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 }

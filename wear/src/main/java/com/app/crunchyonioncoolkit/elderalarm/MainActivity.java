@@ -10,10 +10,14 @@ import android.view.View;
 import android.widget.Button;
 
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
 import java.util.List;
@@ -30,10 +34,11 @@ public class MainActivity extends Activity {
 
     private static final long CONNECTION_TIME_OUT_MS = 100;
     private static final String MESSAGE = "Hello Wear!";
-    private GoogleApiClient client;
+    private GoogleApiClient mGoogleApiClient;
     private String nodeId;
 
     private Button powerButton;
+    private static final String DATA_KEY = "com.example.key.data";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +46,9 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         currentContext = this;
-        currentActivity =this;
+        currentActivity = this;
 
-//        initApi();
+        initApi();
         powerButton = (Button) findViewById(R.id.powerButton);
         powerButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -63,9 +68,9 @@ public class MainActivity extends Activity {
 //        intent.putExtra("message", data);
 //        startActivity(intent);
 
-//        startActivity(new Intent(this, BluetoothActivity.class));
+        startActivity(new Intent(this, TestActivity.class));
 
-        startService(new Intent(this, BLEService.class));
+//        startService(new Intent(this, BLEService.class));
 
 //        GattServer.startServer(this);
     }
@@ -82,12 +87,22 @@ public class MainActivity extends Activity {
         if (powerButton.getText().toString().equals(getString(R.string.turn_on_button_text))) {
             powerButton.setText(getString(R.string.turn_off_button_text));
             powerOn();
+            sendData("","");
             setBackgroundActive(true);
         } else if (powerButton.getText().equals(getString(R.string.turn_off_button_text))) {
             powerButton.setText(getString(R.string.turn_on_button_text));
             powerOff();
             setBackgroundActive(false);
         }
+    }
+
+    // Create a data map and put data in it
+    private void sendData(String path, String data) {
+        PutDataMapRequest putDataMapReq = PutDataMapRequest.create(path);
+        putDataMapReq.getDataMap().putString(DATA_KEY, data);
+        PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
+        PendingResult<DataApi.DataItemResult> pendingResult =
+                Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
     }
 
     void powerOn() {
@@ -127,7 +142,7 @@ public class MainActivity extends Activity {
      * Initializes the GoogleApiClient and gets the Node ID of the connected device.
      */
     private void initApi() {
-        client = getGoogleApiClient(this);
+        mGoogleApiClient = getGoogleApiClient(this);
         retrieveDeviceNode();
     }
 
@@ -152,9 +167,9 @@ public class MainActivity extends Activity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                client.connect();
+                mGoogleApiClient.connect();
                 NodeApi.GetConnectedNodesResult result =
-                        Wearable.NodeApi.getConnectedNodes(client).await();
+                        Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
                 List<Node> nodes = result.getNodes();
                 if (nodes.size() > 0) {
                     nodeId = nodes.get(0).getId();
@@ -177,8 +192,8 @@ public class MainActivity extends Activity {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    client.blockingConnect(CONNECTION_TIME_OUT_MS, TimeUnit.MILLISECONDS);
-                    Wearable.MessageApi.sendMessage(client, nodeId, MESSAGE, new byte[0]).setResultCallback(
+                    mGoogleApiClient.blockingConnect(CONNECTION_TIME_OUT_MS, TimeUnit.MILLISECONDS);
+                    Wearable.MessageApi.sendMessage(mGoogleApiClient, nodeId, MESSAGE, new byte[0]).setResultCallback(
                             new ResultCallback<MessageApi.SendMessageResult>() {
                                 @Override
                                 public void onResult(MessageApi.SendMessageResult sendMessageResult) {
@@ -189,7 +204,7 @@ public class MainActivity extends Activity {
                                 }
                             }
                     );
-                    client.disconnect();
+                    mGoogleApiClient.disconnect();
                     Log.d(TAG, "MESSAGE SENT");
                 }
             }).start();

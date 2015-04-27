@@ -19,9 +19,11 @@ public class AccelerometerHandler implements SensorEventListener {
         double SMV = Math.sqrt((event.values[0] * event.values[0]) + (event.values[1] * event.values[1]) + (event.values[2] * event.values[2]));
         window.newValue(SMV);
 
-        Log.d(TAG, "Acceleration: " + Double.toString(SMV));
-        if (SMV > 3)
-            DecisionMaker.fallDetection();
+//        Log.d(TAG, "Acceleration: " + Double.toString(SMV));
+//        if (SMV > 3)
+//            DecisionMaker.fallDetection();
+
+        DataOut.writeToFile(Double.toString(SMV),"ACC.txt");
     }
 
     @Override

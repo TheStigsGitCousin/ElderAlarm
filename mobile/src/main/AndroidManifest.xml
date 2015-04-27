@@ -45,6 +45,11 @@
             android:name=".BluetoothActivity"
         android:label="title_activity_bluetooth" >
         </activity>
+
+        <activity
+            android:name=".TestActivity"
+            android:label="@string/title_activity_test" >
+        </activity>
     </application>
 
 </manifest>

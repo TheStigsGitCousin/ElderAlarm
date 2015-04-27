@@ -29,8 +29,7 @@ public class DataOut {
         try {
             FileOutputStream f = new FileOutputStream(getAlbumStorageDir(Path), true);
             OutputStreamWriter pw = new OutputStreamWriter(f);
-            //Calendar.getInstance().getTime();
-            pw.append(data + ";" + Calendar.getInstance().getTimeInMillis() + "\n");
+            pw.append(data);
 
             pw.close();
             f.close();
@@ -39,23 +38,10 @@ public class DataOut {
         }
     }
 
-    public static void simpleTestPrint(double[] Values, Calendar[] Date, String Path) {
-        try {
-            FileOutputStream f = new FileOutputStream(getAlbumStorageDir(Path), true);
-            OutputStreamWriter pw = new OutputStreamWriter(f);
-            for (int i = 0; i < Values.length; i++) {
-                pw.append(Values[i] + ";");
-                pw.append(Date[i].getTime() + "\n");
-            }
-            pw.append("0;0");
-            pw.close();
-            f.close();
-        } catch (IOException e) {
-            Log.e("Exception", "File write failed: " + e.toString());
-        }
-
+    public static void deleteFile(String path) {
+        File file = getAlbumStorageDir(path);
+        file.delete();
     }
-
 
     public static String readFromFile(String path) {
 
