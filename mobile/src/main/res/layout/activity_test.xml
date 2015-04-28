@@ -1,4 +1,4 @@
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:orientation="vertical"
@@ -8,17 +8,31 @@
     tools:context="com.app.crunchyonioncoolkit.elderalarm.TestActivity">
 
 
-    <Button
-        android:layout_width="wrap_content"
+    <EditText
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Start"
-        android:id="@+id/start_button"
-        android:layout_gravity="center_horizontal" />
+        android:id="@+id/path_editText"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="66dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Stop"
-        android:id="@+id/stop_button2"
-        android:layout_gravity="center_horizontal" />
-</LinearLayout>
+        android:text="Transfer data"
+        android:id="@+id/transfer_button"
+        android:layout_marginTop="127dp"
+        android:layout_below="@+id/path_editText"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:id="@+id/transferred_textView"
+        android:layout_below="@+id/path_editText"
+        android:layout_alignStart="@+id/transfer_button" />
+
+</RelativeLayout>

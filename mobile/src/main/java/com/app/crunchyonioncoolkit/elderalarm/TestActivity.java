@@ -1,45 +1,43 @@
 package com.app.crunchyonioncoolkit.elderalarm;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.hardware.Sensor;
-import android.hardware.SensorManager;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
+<<<<<<< HEAD
 import java.util.Calendar;
 import java.util.Date;
+=======
+>>>>>>> origin/davidsbranch
 
+public class TestActivity extends Activity {
 
-public class TestActivity extends Activity implements Event {
+    private static final String TAG = "TestActivity";
+    public static Context currentContext;
 
-    Button startButton;
-    Button stopButton;
-
-    Intent serviceIntent;
-
-    Date lastAcc;
-    Date lastGyr;
-    Date lastPul;
-    private Sensor mSensor;
-    // Accelerometer
-    private SensorManager mSensorManager;
-    private AccelerometerHandler accelerometerHandler;
-    // Pulse
-    private PulseHandler pulseHandler;
-    // Gyroscope
-    private GyroscopeHandler gyroscopeHandler;
+    private Button button;
+    private EditText pathEditText;
+    private TextView transferedTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        Log.d("MainActivity", "Starting");
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_test);
+<<<<<<< HEAD
         Log.d("TestActivity", "Starting");
         startButton = (Button) findViewById(R.id.start_button);
         startButton.setOnClickListener(new View.OnClickListener() {
@@ -64,63 +62,67 @@ public class TestActivity extends Activity implements Event {
                 AccelerometerHandler.window = new SlidingWindow();
                 GyroscopeHandler.window = new SlidingWindow();
                 DecisionMakerSimple.TestAlgorithm();
+=======
+
+        IntentFilter filter = new IntentFilter(Intent.ACTION_SEND);
+        MessageReceiver messageReceiver=new MessageReceiver();
+        LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver,filter);
+
+        button = (Button) findViewById(R.id.transfer_button);
+        button.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                transferFiles();
+                return true;
+>>>>>>> origin/davidsbranch
             }
         });
 
-        serviceIntent = new Intent(this, BackgroundService.class);
+        pathEditText = (EditText) findViewById(R.id.path_editText);
 
-        Date now = new Date();
-        lastAcc = now;
-        lastGyr = now;
-        lastPul = now;
-
+        transferedTextView = (TextView) findViewById(R.id.transferred_textView);
+        currentContext = this;
 
     }
-    void initializeSensors() {
 
-        // Accelerometer
-        accelerometerHandler = new AccelerometerHandler();
-        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-        mSensorManager.registerListener(accelerometerHandler, mSensor, 500000000);
-
-        /*// Pulse
-        pulseHandler = new PulseHandler();
-        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
-        mSensorManager.registerListener(pulseHandler, mSensor, SensorManager.SENSOR_DELAY_FASTEST);
-*/
-        // Gyroscope
-        gyroscopeHandler = new GyroscopeHandler();
-        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        mSensorManager.registerListener(gyroscopeHandler, mSensor, 500000000);
-    }
-    void start() {
-
-        initializeSensors();
-    }
-
-    void stop() {
-        if (mSensorManager != null) {
-            mSensorManager.unregisterListener(accelerometerHandler);
-            mSensorManager.unregisterListener(pulseHandler);
-            mSensorManager.unregisterListener(gyroscopeHandler);
+    void transferFiles() {
+        String path = pathEditText.getText().toString();
+        if (path == "") {
+            showToast("NO PATH ENTERED");
+            return;
         }
+        DataOut.writeToFile(DataOut.readFromFile("ACC.txt"), path + "_ACC.txt");
+        DataOut.writeToFile(DataOut.readFromFile("GYR.txt"), path + "_GYR.txt");
+        DataOut.writeToFile(DataOut.readFromFile("PUL.txt"), path + "_PUL.txt");
+
+        DataOut.deleteFile("ACC.txt");
+        DataOut.deleteFile("GYR.txt");
+        DataOut.deleteFile("PUL.txt");
+
+        transferedTextView.setText("Files transferred");
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (mSensorManager != null) {
-            mSensorManager.unregisterListener(accelerometerHandler);
-            mSensorManager.unregisterListener(pulseHandler);
-            mSensorManager.unregisterListener(gyroscopeHandler);
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+    public class MessageReceiver extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            if(message.equals("done")){
+                transferedTextView.setText("DONE");
+            }else if (message.equals("receive")){
+
+                transferedTextView.setText("Receiving data");
+            }
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_test, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -137,10 +139,5 @@ public class TestActivity extends Activity implements Event {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onChange(Result values) {
-
     }
 }

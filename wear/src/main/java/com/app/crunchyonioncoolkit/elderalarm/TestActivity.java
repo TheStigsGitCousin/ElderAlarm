@@ -1,101 +1,250 @@
 package com.app.crunchyonioncoolkit.elderalarm;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
-import java.util.Date;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.MessageApi;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.NodeApi;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
+import com.google.android.gms.wearable.Wearable;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
-public class TestActivity extends Activity  {
-/*
-    Button startButton;
-    Button stopButton;
+public class TestActivity extends Activity {
+    private String TAG = "MainActivity";
+    private String SETTINGS = "settings";
+    private String IS_ACTIVE = "isactive";
 
-    Intent serviceIntent;
+    public static Context currentContext;
+    public static Activity currentActivity;
+    private Intent serviceIntent;
 
-    Date lastAcc;
-    Date lastGyr;
-    Date lastPul;
+    private static final long CONNECTION_TIME_OUT_MS = 100;
+    private static final String MESSAGE = "transferred";
+    private GoogleApiClient mGoogleApiClient;
+    private String nodeId;
+
+    private Button powerButton;
+    private Button sendButton;
+    private TextView transferTextView;
+
+    private static final String DATA_KEY = "com.example.key.data";
+    boolean isActive = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
 
-        startButton = (Button) findViewById(R.id.start_button);
-        startButton.setOnClickListener(new View.OnClickListener() {
+        currentContext = this;
+        currentActivity = this;
+
+        initApi();
+
+        transferTextView =(TextView)findViewById(R.id.transfer_textView);
+
+        powerButton = (Button) findViewById(R.id.powerButton);
+        powerButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
-                start();
+            public boolean onLongClick(View v) {
+                switchPowerState();
+                return true;
             }
         });
-        stopButton = (Button) findViewById(R.id.stop_button);
-        stopButton.setOnClickListener(new View.OnClickListener() {
+        sendButton = (Button) findViewById(R.id.send_data_button);
+        sendButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
-                stop();
+            public boolean onLongClick(View v) {
+                sendToMobile();
+                return true;
             }
         });
+
+        setPowerState();
 
         serviceIntent = new Intent(this, BackgroundService.class);
 
-        Date now = new Date();
-        lastAcc = now;
-        lastGyr = now;
-        lastPul = now;
+        DataOut.writeToFile("123", "ACC.txt");
+        Log.d(TAG, "Data = " + DataOut.readFromFile("ACC.txt"));
+    }
+
+    private void setPowerState() {
+        if (isBackgroundActive()) {
+            powerButton.setText(getString(R.string.turn_off_button_text));
+        } else {
+            powerButton.setText(getString(R.string.turn_on_button_text));
+        }
+    }
+
+    private void switchPowerState() {
+        if (!isActive) {
+            powerButton.setText(getString(R.string.turn_off_button_text));
+            powerOn();
+            sendData("ACC", "[DATA]");
+            // Delete all files before appending new values
+            DataOut.deleteFile("ACC.txt");
+            DataOut.deleteFile("GYR.txt");
+            DataOut.deleteFile("PUL.txt");
+
+            transferTextView.setText("Not transferred");
+
+            setBackgroundActive(true);
+        } else {
+            powerButton.setText(getString(R.string.turn_on_button_text));
+            powerOff();
+            setBackgroundActive(false);
+        }
+    }
+
+    void powerOn() {
+        startService(serviceIntent);
 
     }
 
+    void powerOff() {
+        stopService(serviceIntent);
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_test, menu);
-        return true;
+    }
+
+    boolean isBackgroundActive() {
+        // Restore preferences
+        SharedPreferences settings = getSharedPreferences(SETTINGS, 0);
+        isActive = settings.getBoolean(IS_ACTIVE, false);
+        return isActive;
+    }
+
+    void setBackgroundActive(boolean isActive) {
+        this.isActive = isActive;
+        // We need an Editor object to make preference changes.
+        // All objects are from android.context.Context
+        SharedPreferences settings = getSharedPreferences(SETTINGS, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean(IS_ACTIVE, isActive);
+
+        // Commit the edits!
+        editor.commit();
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    protected void onDestroy() {
+        super.onDestroy();
+        GattServer.stopServer();
+    }
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    private void sendToMobile() {
+        for(String s : SendData.getAccelerationData()){
+            sendData("ACC",s);
         }
 
-        return super.onOptionsItemSelected(item);
+        for(String s : SendData.getGyroscopeData()){
+            sendData("GYR",s);
+        }
+
+        for(String s : SendData.getPulseData()){
+            sendData("PUL",s);
+        }
+
+        transferTextView.setText("Transferred");
+        sendEndMessage();
+
     }
 
-    @Override
-    public void onChange(Result values) {
-        if (values.type.equals(PulseHandler.PULSE_EVENT)) {
-            // If pulse changed
-            if (PulseHandler.window.getWindow().getFirst().timeStamp.after(lastPul)) {
-                DataOut.simpleTestPrint(PulseHandler.window.getValueArray(), PulseHandler.window.getTimeStampArray(), "pulse");
-                lastPul = PulseHandler.window.getWindow().getLast().timeStamp;
-            }
+    // Create a data map and put data in it
+    private void sendData(String path, String data) {
+        String fullPath = "/" + path;
+        PutDataMapRequest putDataMapReq = PutDataMapRequest.create(fullPath);
+        putDataMapReq.getDataMap().putString(DATA_KEY, data);
+        PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
+        PendingResult<DataApi.DataItemResult> pendingResult =
+                Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
+    }
 
-        } else if (values.type.equals(AccelerometerHandler.ACCELERATION_EVENT)) {
-            // If acceleration changed
-            if (AccelerometerHandler.window.getWindow().getFirst().timeStamp.after(lastPul)) {
-                DataOut.simpleTestPrint(AccelerometerHandler.window.getValueArray(), AccelerometerHandler.window.getTimeStampArray(), "acceleration");
-                lastAcc = AccelerometerHandler.window.getWindow().getLast().timeStamp;
+    /**
+     * Initializes the GoogleApiClient and gets the Node ID of the connected device.
+     */
+    private void initApi() {
+        mGoogleApiClient = getGoogleApiClient(this);
+        retrieveDeviceNode();
+    }
+
+
+    /**
+     * Returns a GoogleApiClient that can access the Wear API.
+     *
+     * @param context
+     * @return A GoogleApiClient that can make calls to the Wear API
+     */
+    private GoogleApiClient getGoogleApiClient(Context context) {
+        return new GoogleApiClient.Builder(context)
+                .addApi(Wearable.API)
+                .build();
+    }
+
+    /**
+     * Connects to the GoogleApiClient and retrieves the connected device's Node ID. If there are
+     * multiple connected devices, the first Node ID is returned.
+     */
+    private void retrieveDeviceNode() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mGoogleApiClient.connect();
+                NodeApi.GetConnectedNodesResult result =
+                        Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
+                List<Node> nodes = result.getNodes();
+                if (nodes.size() > 0) {
+                    nodeId = nodes.get(0).getId();
+                    Log.d(TAG, "NODE Id: " + nodeId);
+
+                } else {
+                    Log.d(TAG, "NO NODES FOUND");
+                }
+                Log.d(TAG, "4");
             }
-        } else if (values.type.equals(GyroscopeHandler.GYROSCOPE_EVENT)) {
-            // If gyroscope changed
-            if (GyroscopeHandler.window.getWindow().getFirst().timeStamp.after(lastGyr)) {
-                DataOut.simpleTestPrint(GyroscopeHandler.window.getValueArray(), GyroscopeHandler.window.getTimeStampArray(), "gyroscope");
-                lastGyr = GyroscopeHandler.window.getWindow().getLast().timeStamp;
-            }
+        }).start();
+    }
+
+    /**
+     * Sends a message to the connected mobile device, telling it to show a Toast.
+     */
+    private void sendEndMessage() {
+        Log.d(TAG, "NODE Id" + nodeId);
+        if (nodeId != null) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    mGoogleApiClient.blockingConnect(CONNECTION_TIME_OUT_MS, TimeUnit.MILLISECONDS);
+                    Wearable.MessageApi.sendMessage(mGoogleApiClient, nodeId, MESSAGE, new byte[0]).setResultCallback(
+                            new ResultCallback<MessageApi.SendMessageResult>() {
+                                @Override
+                                public void onResult(MessageApi.SendMessageResult sendMessageResult) {
+                                    if (!sendMessageResult.getStatus().isSuccess()) {
+                                        Log.e(TAG, "Failed to send message with status code: "
+                                                + sendMessageResult.getStatus().getStatusCode());
+                                    }
+                                }
+                            }
+                    );
+                    mGoogleApiClient.disconnect();
+                    Log.d(TAG, "MESSAGE SENT");
+                }
+            }).start();
         }
-    }*/
+    }
+
 }

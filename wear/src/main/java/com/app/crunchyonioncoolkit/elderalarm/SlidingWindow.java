@@ -26,7 +26,7 @@ public class SlidingWindow {
         return window;
     }
 
-    public double[] getValueArray(){
+    public double[] getValueArray() {
 
         double[] array = new double[window.size()];
         int i = 0;
@@ -38,7 +38,7 @@ public class SlidingWindow {
 
     }
 
-    public Calendar[] getTimeStampArray(){
+    public Calendar[] getTimeStampArray() {
 
         Calendar[] array = new Calendar[window.size()];
         int i = 0;
@@ -50,10 +50,11 @@ public class SlidingWindow {
 
     }
 
-    public class Sample{
+    public class Sample {
         public double value;
         public Calendar timeStamp;
-        public Sample(double w, Calendar t){
+
+        public Sample(double w, Calendar t) {
             value = w;
             timeStamp = t;
         }
