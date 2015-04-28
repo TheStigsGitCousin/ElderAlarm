@@ -48,4 +48,9 @@ public class PulseHandler implements SensorEventListener {
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
+    public static void testChange(double SMV){
+        window.newValue(SMV);
+
+        DecisionMakerSimple.detectFall();
+    }
 }

@@ -15,26 +15,24 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("MainActivity", "Starting");
         super.onCreate(savedInstanceState);
+        Log.d("MainActivity", "Starting");
+
 
         //startService(new Intent(this, ListenerService.class));
 
         currentContext = this;
         setContentView(R.layout.activity_main);
 
-<<<<<<< HEAD
-        Intent serviceIntent = new Intent(this, TestActivity.class);
-        startActivity(serviceIntent);
-        //DecisionMakerSimple.TestAlgorithm();
 
-=======
 //        Intent serviceIntent = new Intent(this, BackgroundService.class);
 //        startService(serviceIntent);
-        startActivity(new Intent(this, TestActivity.class));
+        //startActivity(new Intent(this, TestActivity.class));
 //        GattServer.startServer(this);
 //        DecisionMakerSimple.TestAlgorithm();
->>>>>>> origin/davidsbranch
+        RunTestRes Res = new RunTestRes();
+        Res.readRes("1");
+
     }
 
 

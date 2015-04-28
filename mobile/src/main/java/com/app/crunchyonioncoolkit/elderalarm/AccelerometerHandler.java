@@ -26,9 +26,11 @@ public class AccelerometerHandler implements SensorEventListener {
 
     }
 
-    public void testChange(double SMV){
-        window.newValue(SMV);
-
+    public static void testChange(double SMV){
+        synchronized(window) {
+            window.newValue(SMV);
+        }
+        Log.d("Accelerom", "On testChange, SMV:  " + SMV);
         DecisionMakerSimple.detectFall();
     }
 }

@@ -16,10 +16,12 @@ public class SlidingWindow {
     }
 
     public void newValue(double SMV) {
-        window.addLast(new Sample(SMV, Calendar.getInstance()));
+        synchronized(window) {
+            window.addLast(new Sample(SMV, Calendar.getInstance()));
 
-        if (window.size() > Constants.WINDOW_WIDTH) {
-            window.removeFirst();
+            if (window.size() > Constants.WINDOW_WIDTH) {
+                window.removeFirst();
+            }
         }
     }
 
@@ -29,24 +31,30 @@ public class SlidingWindow {
 
     public double[] getValueArray(){
 
-        double[] array = new double[window.size()];
-        int i = 0;
-        for (Sample d : window) {
-            array[i] = d.value;
-            i++;
+        double[] array = new double[0];
+        synchronized(window) {
+            array = new double[window.size()];
+            int i = 0;
+            for (Sample d : window) {
+                array[i] = d.value;
+                i++;
+            }
         }
         return array;
 
     }
 
     public Calendar[] getTimeStampArray(){
-
-        Calendar[] array = new Calendar[window.size()];
-        int i = 0;
-        for (Sample d : window) {
-            array[i] = d.timeStamp;
-            i++;
+        Calendar[] array = new Calendar[0];
+        synchronized(window) {
+            array = new Calendar[window.size()];
+            int i = 0;
+            for (Sample d : window) {
+                array[i] = d.timeStamp;
+                i++;
+            }
         }
+
         return array;
 
     }

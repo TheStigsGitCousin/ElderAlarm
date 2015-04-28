@@ -25,4 +25,12 @@ public class GyroscopeHandler implements SensorEventListener {
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
+    public static void testChange(double SMV){
+        synchronized(window) {
+            window.newValue(SMV);
+        }
+
+
+        DecisionMakerSimple.detectFall();
+    }
 }

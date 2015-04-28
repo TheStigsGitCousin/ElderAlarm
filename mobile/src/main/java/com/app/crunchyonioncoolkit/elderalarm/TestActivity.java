@@ -16,11 +16,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-<<<<<<< HEAD
+
 import java.util.Calendar;
 import java.util.Date;
-=======
->>>>>>> origin/davidsbranch
 
 public class TestActivity extends Activity {
 
@@ -37,32 +35,9 @@ public class TestActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_test);
-<<<<<<< HEAD
+
         Log.d("TestActivity", "Starting");
-        startButton = (Button) findViewById(R.id.start_button);
-        startButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AccelerometerHandler.ACC_PATH = "ACC_" + Calendar.getInstance().getTime().toString() + ".txt";
-                GyroscopeHandler.GRY_PATH = "GRY_" + Calendar.getInstance().getTime().toString() + ".txt";
 
-                start();
-
-            }
-        });
-        stopButton = (Button) findViewById(R.id.stop_button2);
-        stopButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("TestActivity", "STOP!!");
-                //Marks end of test, press Stop button
-                //DataOut.writeToFile(, "ACC.txt");
-                //DataOut.writeToFile(, "GYR.txt");
-                stop();
-                AccelerometerHandler.window = new SlidingWindow();
-                GyroscopeHandler.window = new SlidingWindow();
-                DecisionMakerSimple.TestAlgorithm();
-=======
 
         IntentFilter filter = new IntentFilter(Intent.ACTION_SEND);
         MessageReceiver messageReceiver=new MessageReceiver();
@@ -74,7 +49,7 @@ public class TestActivity extends Activity {
             public boolean onLongClick(View v) {
                 transferFiles();
                 return true;
->>>>>>> origin/davidsbranch
+
             }
         });
 
