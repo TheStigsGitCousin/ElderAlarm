@@ -116,7 +116,7 @@ public class AlarmActivity extends Activity implements Event {
         // Disconnect potential bluetooth connection
         bluetooth.stopBluetooth();
         // Cancel pulse updates
-        PulseHandler.removeEventListener(this);
+        PulseHandler.listener.removeEventListener(this);
 
         // Navigate to MainActivity
         Intent intent = new Intent(this, MainActivity.class);
@@ -139,7 +139,7 @@ public class AlarmActivity extends Activity implements Event {
     protected void onDestroy() {
         super.onDestroy();
         // Remove listeners
-        PulseHandler.removeEventListener(this);
+        PulseHandler.listener.removeEventListener(this);
         Alarm.removeEventListener(this);
     }
 
@@ -173,7 +173,7 @@ public class AlarmActivity extends Activity implements Event {
             // If alarm state changed to 'Active'
             Log.d(TAG, "alarm activated");
             // Register for pulse updates
-            PulseHandler.addEventListener(this);
+            PulseHandler.listener.addEventListener(this);
             // Hide the cancel button
             cancelButton.setVisibility(View.GONE);
             // Show the pulse display layout
