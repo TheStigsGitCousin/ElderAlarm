@@ -10,6 +10,7 @@ import android.util.Log;
  */
 public class AccelerometerHandler implements SensorEventListener {
     public static String ACC_PATH;
+    public static String TAG = "AccelerometerHandler";
     public static SlidingWindow window = new SlidingWindow();
 
 
@@ -26,11 +27,11 @@ public class AccelerometerHandler implements SensorEventListener {
 
     }
 
-    public static void testChange(double SMV){
-        synchronized(window) {
+    public static void testChange(double SMV) {
+        synchronized (window) {
             window.newValue(SMV);
         }
-        Log.d("Accelerom", "On testChange, SMV:  " + SMV);
-        DecisionMakerSimple.detectFall();
+        Log.d(TAG, "On testChange, SMV:  " + SMV);
+        DecisionMaker.fallDetection();
     }
 }

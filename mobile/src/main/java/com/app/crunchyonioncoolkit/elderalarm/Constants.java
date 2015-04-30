@@ -6,7 +6,7 @@ package com.app.crunchyonioncoolkit.elderalarm;
 public class Constants {
 
     // Threshold to determine peak time
-    public static double PEAK_TIME_THRESHOLD = 24.4;
+    public static double PEAK_TIME_THRESHOLD = 11;
     // Samples after peak when SMV < PEAK_TIME_THRESHOLD
     public static int TIME_WITHOUT_PEAKS = 2000;
     // Sliding window time size (ms)
@@ -25,7 +25,7 @@ public class Constants {
     public static double AAMV_THRESHOLD = 0.52;
     public static int IDI_THRESHOLD = 320;
     // Maximum acceleration
-    public static double MAXIMUM_PEAK_THRESHOLD = 102.4;
+    public static double MAXIMUM_PEAK_THRESHOLD = 34.1;
     // MVI start interval
     public static int MVI_Interval = 500;
     // MVI average magnitude interval
