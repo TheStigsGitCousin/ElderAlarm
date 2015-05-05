@@ -42,7 +42,7 @@ public class BLEService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        createGattServer(MainActivity.currentActivity);
+        createGattServer(StartActivity.currentActivity);
     }
 
     @Override
@@ -99,7 +99,7 @@ public class BLEService extends Service {
         public void onConnectionStateChange(BluetoothDevice device, int status, int newState) {
             super.onConnectionStateChange(device, status, newState);
             Log.d(TAG, "onConnectionStateChange");
-            Context context = MainActivity.currentContext;
+            Context context = StartActivity.currentContext;
             CharSequence text = "OnConnectionChange";
             int duration = Toast.LENGTH_SHORT;
 

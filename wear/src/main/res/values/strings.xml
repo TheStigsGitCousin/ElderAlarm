@@ -16,5 +16,12 @@
     <string name="turn_off_button_text">Hold to turn OFF</string>
     <string name="title_activity_test">TestActivity</string>
     <string name="title_activity_bluetooth">BluetoothActivity</string>
+    <string name="title_activity_start">StartActivity</string>
+
+    <string-array name="scenario_array">
+        <item>StartActivity</item>
+        <item>TestActivity</item>
+        <item>AlarmActivity</item>
+    </string-array>
 
 </resources>

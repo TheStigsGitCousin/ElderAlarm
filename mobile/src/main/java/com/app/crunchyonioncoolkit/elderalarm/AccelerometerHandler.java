@@ -5,6 +5,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.util.Log;
 
+import java.util.Calendar;
+
 /**
  * Created by David on 2015-04-02.
  */
@@ -27,11 +29,11 @@ public class AccelerometerHandler implements SensorEventListener {
 
     }
 
-    public static void testChange(double SMV) {
+    public static void testChange(double SMV, Calendar time) {
         synchronized (window) {
-            window.newValue(SMV);
+            window.newValue(SMV, time);
         }
-        Log.d(TAG, "On testChange, SMV:  " + SMV);
+        //Log.d(TAG, "On testChange, SMV:  " + SMV);
         DecisionMaker.fallDetection();
     }
 }

@@ -1,7 +1,6 @@
 package com.app.crunchyonioncoolkit.elderalarm;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.LinkedList;
 
 /**
@@ -18,6 +17,16 @@ public class SlidingWindow {
     public void newValue(double SMV) {
         synchronized(window) {
             window.addLast(new Sample(SMV, Calendar.getInstance()));
+
+            if (window.size() > Constants.WINDOW_WIDTH) {
+                window.removeFirst();
+            }
+        }
+    }
+
+    public void newValue(double SMV, Calendar time) {
+        synchronized(window) {
+            window.addLast(new Sample(SMV, time));
 
             if (window.size() > Constants.WINDOW_WIDTH) {
                 window.removeFirst();

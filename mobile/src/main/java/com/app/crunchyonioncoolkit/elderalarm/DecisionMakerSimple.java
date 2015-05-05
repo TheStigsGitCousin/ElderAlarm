@@ -54,21 +54,21 @@ public class DecisionMakerSimple {
         String[] arrayGyr = dataGyr.split("\n");
 
         String[] valueAndTime;
-        for (int i = 0; i < array.length; i++) {
-            //Log.d(TAG, Integer.toString(i));
-            valueAndTime = array[i].split(";");
-
-            accelerometerHandler.testChange(Double.parseDouble(valueAndTime[0]));
-
-            valueAndTime = arrayGyr[i].split(";");
-
-            GyroscopeHandler.window.newValue(Double.parseDouble(valueAndTime[0]));
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+//        for (int i = 0; i < array.length; i++) {
+//            //Log.d(TAG, Integer.toString(i));
+//            valueAndTime = array[i].split(";");
+//
+//            accelerometerHandler.testChange(Double.parseDouble(valueAndTime[0]));
+//
+//            valueAndTime = arrayGyr[i].split(";");
+//
+//            GyroscopeHandler.window.newValue(Double.parseDouble(valueAndTime[0]));
+//            try {
+//                Thread.sleep(10);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 }
 

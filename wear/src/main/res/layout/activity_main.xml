@@ -11,13 +11,10 @@
     android:orientation="vertical"
     android:background="@color/white">
 
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:text="@string/turn_on_button_text"
-        android:background="@color/blue"
-        android:id="@+id/powerButton"
-        android:visibility="visible" />
 
-
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scenarioListView"
+        android:layout_gravity="center_horizontal"/>
 </LinearLayout>

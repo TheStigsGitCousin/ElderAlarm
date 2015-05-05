@@ -14,11 +14,11 @@ public class Constants {
     // Interval to search for impact end (ms)
     public static int IMPACT_END_INTERVAL = 1000;
     // Magnitude of impact
-    public static double IMPACT_END_MAGNITUDE_THRESHOLD = 1.5;
+    public static double IMPACT_END_MAGNITUDE_THRESHOLD = 4;
     // Interval to search for impact start (ms)
-    public static int IMPACT_START_INTERVAL = 1200;
+    public static int IMPACT_START_INTERVAL = 1900;
     // Magnitude after impact
-    public static double IMPACT_START_LOW_THRESHOLD = 1.5;
+    public static double IMPACT_START_LOW_THRESHOLD = 3;
     // Win interval
     public static int WIN_INTERVAL = 1000;
     // AAMV

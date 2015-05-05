@@ -10,25 +10,27 @@ import java.util.List;
 public class RunTestRes {
 
     public void readRes(String Path) {
-        String DataAcc = DataOut.readFromFile(Path + "_ACC.txt");
-        String DataGyr = DataOut.readFromFile(Path + "_GYR.txt");
-        String DataPul = DataOut.readFromFile(Path + "_PUL.txt");
-        final List<DataAndTime> ListAcc = parseDataAndTime(DataAcc);
-        final List<DataAndTime> ListGyr = parseDataAndTime(DataGyr);
-        final List<DataAndTime> ListPul = parseDataAndTime(DataPul);
+        String dataAcc = DataOut.readFromFile(Path + "_ACC.txt");
+        String dataGyr = DataOut.readFromFile(Path + "_GYR.txt");
+        String dataPul = DataOut.readFromFile(Path + "_PUL.txt");
+        final List<DataAndTime> listAcc = parseDataAndTime(dataAcc);
+        final List<DataAndTime> listGyr = parseDataAndTime(dataGyr);
+        final List<DataAndTime> listPul = parseDataAndTime(dataPul);
 
 
         // Thread for accelerometer
         new Thread(new Runnable() {
             public void run() {
 
-                for (int i = 0; i < ListAcc.size() - 1; i++) {
-                    long TimeDiff = ListAcc.get(i + 1).Time - ListAcc.get(i).Time;
+                Calendar time= Calendar.getInstance();
+                for (int i = 0; i < listAcc.size() - 1; i++) {
+                    long TimeDiff = listAcc.get(i + 1).Time - listAcc.get(i).Time;
                     long Start = Calendar.getInstance().getTimeInMillis();
                     while ((Calendar.getInstance().getTimeInMillis() - Start) < TimeDiff) {
 
                     }
-                    AccelerometerHandler.testChange(ListAcc.get(i + 1).Data);
+                    time.setTimeInMillis(listAcc.get(i).Time);
+                    AccelerometerHandler.testChange(listAcc.get(i + 1).Data, time);
                 }
             }
         }).start();
@@ -37,13 +39,13 @@ public class RunTestRes {
         new Thread(new Runnable() {
             public void run() {
 
-                for (int i = 0; i < ListGyr.size() - 1; i++) {
-                    long TimeDiff = ListGyr.get(i + 1).Time - ListGyr.get(i).Time;
+                for (int i = 0; i < listGyr.size() - 1; i++) {
+                    long TimeDiff = listGyr.get(i + 1).Time - listGyr.get(i).Time;
                     long Start = Calendar.getInstance().getTimeInMillis();
                     while ((Calendar.getInstance().getTimeInMillis() - Start) < TimeDiff) {
 
                     }
-                    GyroscopeHandler.testChange(ListGyr.get(i + 1).Data);
+                    GyroscopeHandler.testChange(listGyr.get(i + 1).Data);
                 }
             }
         }).start();
@@ -52,13 +54,13 @@ public class RunTestRes {
         new Thread(new Runnable() {
             public void run() {
 
-                for (int i = 0; i < ListPul.size() - 1; i++) {
-                    long TimeDiff = ListPul.get(i + 1).Time - ListPul.get(i).Time;
+                for (int i = 0; i < listPul.size() - 1; i++) {
+                    long TimeDiff = listPul.get(i + 1).Time - listPul.get(i).Time;
                     long Start = Calendar.getInstance().getTimeInMillis();
                     while ((Calendar.getInstance().getTimeInMillis() - Start) < TimeDiff) {
 
                     }
-                    PulseHandler.testChange(ListPul.get(i + 1).Data);
+                    PulseHandler.testChange(listPul.get(i + 1).Data);
                 }
             }
         }).start();

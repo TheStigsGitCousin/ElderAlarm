@@ -29,8 +29,5 @@ public class GyroscopeHandler implements SensorEventListener {
         synchronized(window) {
             window.newValue(SMV);
         }
-
-
-        DecisionMakerSimple.detectFall();
     }
 }

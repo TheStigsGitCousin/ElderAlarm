@@ -88,20 +88,23 @@ public class AlarmActivity extends Activity implements Event {
 
         bluetooth.startBluetooth();
 
-        Log.d(TAG,"onCreate");
 
+        Log.d(TAG, "onCreate");
     }
 
-    void setStartState(){
+    void setStartState() {
+        if (!isBackgroundActive()) {
 
+        }
     }
-    boolean isBackgroundActive(){
+
+    boolean isBackgroundActive() {
         // Restore preferences
         SharedPreferences settings = getSharedPreferences(SETTINGS, 0);
         return settings.getBoolean(IS_ACTIVE, false);
     }
 
-    void setBackgroundActive(boolean isActive){
+    void setBackgroundActive(boolean isActive) {
         // We need an Editor object to make preference changes.
         // All objects are from android.context.Context
         SharedPreferences settings = getSharedPreferences(SETTINGS, 0);
@@ -111,12 +114,15 @@ public class AlarmActivity extends Activity implements Event {
         // Commit the edits!
         editor.commit();
     }
+
     // Navigate to MainActivity
     private void goToMainActivity() {
         // Disconnect potential bluetooth connection
         bluetooth.stopBluetooth();
         // Cancel pulse updates
         PulseHandler.listener.removeEventListener(this);
+        // Set the background active variable to false
+        setBackgroundActive(false);
 
         // Navigate to MainActivity
         Intent intent = new Intent(this, MainActivity.class);
@@ -125,6 +131,7 @@ public class AlarmActivity extends Activity implements Event {
 
     private void cancelAlarm() {
         alarm.cancelAlarm();
+        Vibration.stopVibration();
     }
 
 
@@ -167,6 +174,7 @@ public class AlarmActivity extends Activity implements Event {
             if (getDateDiff(lastPulseUpdate, currentTime) > PULSE_UPDATE_FREQUENCY) {
                 Log.d(TAG, "pulse changed: " + Float.toString(((float[]) values.value)[0]));
                 pulseTextView.setText(Float.toString(((float[]) values.value)[0]));
+                lastPulseUpdate = currentTime;
             }
 
         } else if (values.type.equals(Alarm.ALARM_EVENT)) {
@@ -174,6 +182,7 @@ public class AlarmActivity extends Activity implements Event {
             Log.d(TAG, "alarm activated");
             // Register for pulse updates
             PulseHandler.listener.addEventListener(this);
+            setBackgroundActive(true);
             // Hide the cancel button
             cancelButton.setVisibility(View.GONE);
             // Show the pulse display layout
