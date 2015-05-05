@@ -1,17 +1,21 @@
 package com.app.crunchyonioncoolkit.elderalarm;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 
 public class MainActivity extends ActionBarActivity {
 
     public static Context currentContext;
+    private EditText editText;
+    Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,9 +28,19 @@ public class MainActivity extends ActionBarActivity {
         currentContext = this;
         setContentView(R.layout.activity_main);
 
+        editText = (EditText) findViewById(R.id.main_editText);
 
-        RunTestRes Res = new RunTestRes();
-        Res.readRes("davidtest/hittable");
+        button = (Button) findViewById(R.id.run_button);
+        button.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Log.d("MainActivity", "LongClick");
+                RunTestRes Res = new RunTestRes();
+                Res.readRes("davidtest/" + editText.getText().toString());
+                return true;
+            }
+        });
+
 //        Intent serviceIntent = new Intent(this, BackgroundService.class);
 //        startService(serviceIntent);
 //        startActivity(new Intent(this, TestActivity.class));

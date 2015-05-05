@@ -1,6 +1,5 @@
 package com.app.crunchyonioncoolkit.elderalarm;
 
-import android.content.Intent;
 import android.util.Log;
 
 import java.util.Calendar;
@@ -22,18 +21,10 @@ public class DecisionMaker {
     }
 
     public static void fallDetection() {
-        if (isDetectionActive) {
-            int testSum = runTests();
-            if (testSum >= 30) {
-//                isDetectionActive = false;
-//                Intent intent = new Intent(BackgroundService.context, AlarmActivity.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                MyParcelable data = new MyParcelable(10, "cardiac arrest");
-//                intent.putExtra("message", data);
-//                BackgroundService.context.startActivity(intent);
-                Log.d("DecisionMaker", "FALL DETECTED");
+        int testSum = runTests();
+        if (testSum >= 15) {
+            Log.d("DecisionMaker", "FALL DETECTED");
 
-            }
         }
     }
 
@@ -46,8 +37,7 @@ public class DecisionMaker {
         if (peakTime == null) {
             return 0;
         }
-//        Log.d(TAG, " PeakTime: " + Long.toString(timeArray[timeArray.length - 1].getTimeInMillis() - peakTime.getTimeInMillis()) + " (" + Long.toString(peakTime.getTimeInMillis())+")");
-//        Log.d(TAG, " PeakTime: " + Long.toString(peakTime.getTimeInMillis()));
+        Log.d(TAG, " PeakTime: " + Long.toString(timeArray[timeArray.length - 1].getTimeInMillis() - peakTime.getTimeInMillis()) + " (" + Long.toString(peakTime.getTimeInMillis()) + ")");
         int sum = 0;
         // impact end
         Calendar impactEnd = Algorithms.impactEnd(samples, timeArray, peakTime);

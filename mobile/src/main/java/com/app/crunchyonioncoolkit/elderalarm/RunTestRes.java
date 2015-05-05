@@ -22,16 +22,18 @@ public class RunTestRes {
         new Thread(new Runnable() {
             public void run() {
 
-                Calendar time= Calendar.getInstance();
+//                Calendar time = Calendar.getInstance();
                 for (int i = 0; i < listAcc.size() - 1; i++) {
                     long TimeDiff = listAcc.get(i + 1).Time - listAcc.get(i).Time;
                     long Start = Calendar.getInstance().getTimeInMillis();
                     while ((Calendar.getInstance().getTimeInMillis() - Start) < TimeDiff) {
 
                     }
-                    time.setTimeInMillis(listAcc.get(i).Time);
-                    AccelerometerHandler.testChange(listAcc.get(i + 1).Data, time);
+                    AccelerometerHandler.testChange(listAcc.get(i + 1).Data);
+//                    time.setTimeInMillis(listAcc.get(i).Time);
                 }
+
+                AccelerometerHandler.window = new SlidingWindow();
             }
         }).start();
 
@@ -46,6 +48,7 @@ public class RunTestRes {
 
                     }
                     GyroscopeHandler.testChange(listGyr.get(i + 1).Data);
+                    GyroscopeHandler.window = new SlidingWindow();
                 }
             }
         }).start();

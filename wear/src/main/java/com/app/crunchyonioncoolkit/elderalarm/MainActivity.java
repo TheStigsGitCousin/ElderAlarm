@@ -2,7 +2,6 @@ package com.app.crunchyonioncoolkit.elderalarm;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -41,6 +40,8 @@ public class MainActivity extends Activity {
                     MyParcelable data = new MyParcelable(10, "cardiac arrest");
                     intent.putExtra("message", data);
                     startActivity(intent);
+                }else if (((TextView) view).getText().equals("PulseActivity")) {
+                    startActivity(new Intent(getApplicationContext(), PulseActivity.class));
                 }
             }
         });
@@ -51,6 +52,7 @@ public class MainActivity extends Activity {
         list.add("TestActivity");
         list.add("StartActivity");
         list.add("AlarmActivity");
+        list.add("PulseActivity");
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list);
         listView.setAdapter(adapter);
 

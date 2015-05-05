@@ -12,13 +12,13 @@ public class Constants {
     // Sliding window time size (ms)
     public static int WINDOW_WIDTH = 6000;
     // Interval to search for impact end (ms)
-    public static int IMPACT_END_INTERVAL = 1200;
+    public static int IMPACT_END_INTERVAL = 800;
     // Magnitude of impact
-    public static double IMPACT_END_MAGNITUDE_THRESHOLD = 7;
+    public static double IMPACT_END_MAGNITUDE_THRESHOLD = 3;
     // Interval to search for impact start (ms)
-    public static int IMPACT_START_INTERVAL = 1600;
+    public static int IMPACT_START_INTERVAL = 1200;
     // Magnitude after impact
-    public static double IMPACT_START_LOW_THRESHOLD = 6;
+    public static double IMPACT_START_LOW_THRESHOLD = 2;
     // Win interval
     public static int WIN_INTERVAL = 1000;
     // AAMV

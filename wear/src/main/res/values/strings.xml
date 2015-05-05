@@ -23,5 +23,6 @@
         <item>TestActivity</item>
         <item>AlarmActivity</item>
     </string-array>
+    <string name="title_activity_pulse">PulseActivity</string>
 
 </resources>

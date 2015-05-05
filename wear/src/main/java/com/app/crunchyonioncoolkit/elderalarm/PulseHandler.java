@@ -20,11 +20,10 @@ public class PulseHandler implements SensorEventListener {
     private int accuracy = 0;
 
     // Sub
-    public static EventListener listener;
+    public static EventListener listener = new EventListener();
 
     public PulseHandler(boolean writeToFile) {
         // Initialize EventListener for receiving pulse data in AlarmActivity
-        listener = new EventListener();
 
         this.writeToFile = writeToFile;
     }

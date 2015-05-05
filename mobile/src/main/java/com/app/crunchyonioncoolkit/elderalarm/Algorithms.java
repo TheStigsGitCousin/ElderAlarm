@@ -49,7 +49,7 @@ public class Algorithms {
             }
         }
 
-//            Log.d(TAG, "Impact end: " + (afterImpact==null?"null" Long.toString(afterImpact.getTimeInMillis())));
+        Log.d(TAG, "Impact end: " + (afterImpact == null ? "null" : Long.toString(afterImpact.getTimeInMillis())));
         return afterImpact;
     }
 
@@ -59,9 +59,8 @@ public class Algorithms {
         Calendar startPoint = Calendar.getInstance();
         startPoint.setTimeInMillis(impactEnd.getTimeInMillis() - Constants.IMPACT_START_INTERVAL);
 
-
-        //Log.d(TAG, "PeakTime: " + Long.toString(peakTime.getTimeInMillis()));
         if (startPoint.getTimeInMillis() < timeArray[0].getTimeInMillis()) {
+            Log.d(TAG, "last time sample: " + Long.toString(timeArray[0].getTimeInMillis()));
             return null;
         }
 
@@ -72,13 +71,12 @@ public class Algorithms {
 
                     afterImpact = timeArray[i];
                     impactStartIndex = i;
-                    //Log.d(TAG, "impactStart Found");
                     break;
                 }
             }
         }
 
-//        Log.d(TAG, "Impact start: " + (afterImpact == null ? "null" : Long.toString(afterImpact.getTimeInMillis())));
+        Log.d(TAG, "Impact start: " + (afterImpact == null ? "null" : Long.toString(afterImpact.getTimeInMillis())));
 
         return afterImpact;
     }
