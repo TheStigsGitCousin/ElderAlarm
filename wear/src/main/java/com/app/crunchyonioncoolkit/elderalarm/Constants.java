@@ -55,7 +55,7 @@ public class Constants {
     public static int FFI_SCORE = 5;
 
     // Resualt treshold for decision maker to alarm
-    public static int RESUALT_THRESHOLD = 15;
+    public static int RESULT_THRESHOLD = 15;
 
 
 

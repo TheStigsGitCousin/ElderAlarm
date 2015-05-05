@@ -119,6 +119,8 @@ public class AlarmActivity extends Activity implements Event {
     private void goToMainActivity() {
         // Disconnect potential bluetooth connection
 //        bluetooth.stopBluetooth();
+        // Activate fall detection again
+        DecisionMaker.activateAlarm();
         // Cancel pulse updates
         PulseHandler.listener.removeEventListener(this);
         // Set the background active variable to false
@@ -130,7 +132,6 @@ public class AlarmActivity extends Activity implements Event {
     }
 
     private void cancelAlarm() {
-
         alarm.cancelAlarm();
         Vibration.stopVibration();
     }

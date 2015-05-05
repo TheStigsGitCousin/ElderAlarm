@@ -2,6 +2,7 @@ package com.app.crunchyonioncoolkit.elderalarm;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,7 +14,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class MainActivity extends Activity {
-
+    private static final String TAG = "MainActivity";
     private ListView listView;
     Intent serviceIntent;
 
@@ -27,7 +28,7 @@ public class MainActivity extends Activity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("MainActivity", "text: " + ((TextView) view).getText());
+                Log.d(TAG, "text: " + ((TextView) view).getText());
                 if (((TextView) view).getText().equals("StartActivity")) {
                     startActivity(new Intent(getApplicationContext(), StartActivity.class));
                 } else if (((TextView) view).getText().equals("TestActivity")) {
