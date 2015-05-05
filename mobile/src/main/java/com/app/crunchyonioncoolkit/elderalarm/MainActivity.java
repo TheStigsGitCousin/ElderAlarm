@@ -1,6 +1,7 @@
 package com.app.crunchyonioncoolkit.elderalarm;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -24,13 +25,13 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
 
+        RunTestRes Res = new RunTestRes();
+        Res.readRes("davidtest/hittable");
 //        Intent serviceIntent = new Intent(this, BackgroundService.class);
 //        startService(serviceIntent);
-        //startActivity(new Intent(this, TestActivity.class));
+//        startActivity(new Intent(this, TestActivity.class));
 //        GattServer.startServer(this);
 //        DecisionMakerSimple.TestAlgorithm();
-        RunTestRes Res = new RunTestRes();
-        Res.readRes("3.1_1");
 
     }
 

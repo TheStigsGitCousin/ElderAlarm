@@ -25,7 +25,10 @@ public class Algorithms {
             }
         }
 
-        return (timeSamples[timeSamples.length - 1].getTimeInMillis() - peakTime.getTimeInMillis()) >= Constants.TIME_WITHOUT_PEAKS ? peakTime : null;
+        long timeWithoutPeaks = timeSamples[timeSamples.length - 1].getTimeInMillis() - peakTime.getTimeInMillis();
+//        Log.d(TAG, " PeakTime: " + Long.toString(timeWithoutPeaks) + " (" + Long.toString(peakTime.getTimeInMillis())+")");
+
+        return timeWithoutPeaks >= Constants.TIME_WITHOUT_PEAKS ? peakTime : null;
     }
 
     // Calculate last significant impact with the ground
@@ -45,8 +48,8 @@ public class Algorithms {
                 impactEndIndex = i;
             }
         }
-        if(afterImpact!=null)
-        Log.d(TAG, "Impact end: " + Long.toString(afterImpact.getTimeInMillis()));
+
+//            Log.d(TAG, "Impact end: " + (afterImpact==null?"null" Long.toString(afterImpact.getTimeInMillis())));
         return afterImpact;
     }
 
@@ -59,25 +62,23 @@ public class Algorithms {
 
         //Log.d(TAG, "PeakTime: " + Long.toString(peakTime.getTimeInMillis()));
         if (startPoint.getTimeInMillis() < timeArray[0].getTimeInMillis()) {
-            Log.d(TAG, "startpoint < timeA:   " + Long.toString(timeArray[0].getTimeInMillis()));
-
             return null;
         }
 
         for (int i = 0; i < samples.length; i++) {
-            if (timeArray[i].getTimeInMillis() > startPoint.getTimeInMillis() && timeArray[i].getTimeInMillis() <= peakTime.getTimeInMillis()){
+            if (timeArray[i].getTimeInMillis() > startPoint.getTimeInMillis() && timeArray[i].getTimeInMillis() <= peakTime.getTimeInMillis()) {
                 //Log.d(TAG, "kom in lager 1");
-                if(samples[i] >= Constants.IMPACT_END_MAGNITUDE_THRESHOLD && samples[i + 1] <= Constants.IMPACT_START_LOW_THRESHOLD) {
+                if (samples[i] >= Constants.IMPACT_END_MAGNITUDE_THRESHOLD && samples[i + 1] <= Constants.IMPACT_START_LOW_THRESHOLD) {
 
-                afterImpact = timeArray[i];
-                impactStartIndex = i;
-                //Log.d(TAG, "impactStart Found");
-                break;
-            }
+                    afterImpact = timeArray[i];
+                    impactStartIndex = i;
+                    //Log.d(TAG, "impactStart Found");
+                    break;
+                }
             }
         }
-        if(afterImpact!=null)
-        Log.d(TAG, "Impact start: " + Long.toString(afterImpact.getTimeInMillis()));
+
+//        Log.d(TAG, "Impact start: " + (afterImpact == null ? "null" : Long.toString(afterImpact.getTimeInMillis())));
 
         return afterImpact;
     }
@@ -100,7 +101,9 @@ public class Algorithms {
     }
 
     public static boolean ImpactDurationIndex(Calendar impactStart, Calendar impactEnd) {
-        return ((impactEnd.getTimeInMillis() - impactStart.getTimeInMillis()) > Constants.IDI_THRESHOLD);
+        long idi = (impactEnd.getTimeInMillis() - impactStart.getTimeInMillis());
+        Log.d(TAG, "IDI: " + Long.toString(idi));
+        return (idi > Constants.IDI_LOW_THRESHOLD && idi < Constants.IDI_HIGH_THRESHOLD);
     }
 
     public static boolean MaximumPeakIndex(double[] samples) {
@@ -117,7 +120,7 @@ public class Algorithms {
 
     public static boolean MinimumValleyIndex(double[] samples, Calendar[] timeArray, Calendar impactStart, Calendar impactEnd) {
         double minAcceleration = samples[impactEndIndex];
-        for (int i = impactEndIndex; i >=0 && timeArray[i].getTimeInMillis() > impactStart.getTimeInMillis() - Constants.MVI_Interval; i--) {
+        for (int i = impactEndIndex; i >= 0 && timeArray[i].getTimeInMillis() > impactStart.getTimeInMillis() - Constants.MVI_Interval; i--) {
             if (samples[i] < minAcceleration)
                 minAcceleration = samples[i];
         }
@@ -129,11 +132,11 @@ public class Algorithms {
     public static boolean PeakDurationIndex(double[] samples, Calendar[] timeArray) {
         int End = PDIEnd(samples, peakTimeIndex);
         int Start = PDIStart(samples, peakTimeIndex);
-        if(End < 0 || Start < 0)
+        if (End < 0 || Start < 0)
             return false;
         long PDI = timeArray[End].getTimeInMillis() - timeArray[Start].getTimeInMillis();
         Log.d(TAG, "PDI: " + Long.toString(PDI));
-        return (PDI < Constants.PDI_MAX && PDI > Constants.PDI_INTERVAL);
+        return (PDI < Constants.PDI_MAX && PDI > Constants.PDI_MIN);
     }
 
     public static boolean ActivityRatioIndex(double[] samples, Calendar[] timeArray) {
@@ -165,7 +168,7 @@ public class Algorithms {
     private static double average(double[] samples, Calendar[] timeArray, Calendar start) {
         double sum = 0;
         int num = 0;
-        for (int i = FFIEndIndex;i >= 0 && timeArray[i].getTimeInMillis() > start.getTimeInMillis(); i--) {
+        for (int i = FFIEndIndex; i >= 0 && timeArray[i].getTimeInMillis() > start.getTimeInMillis(); i--) {
             sum += samples[i];
             num++;
         }

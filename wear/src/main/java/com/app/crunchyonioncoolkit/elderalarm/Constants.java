@@ -12,18 +12,19 @@ public class Constants {
     // Sliding window time size (ms)
     public static int WINDOW_WIDTH = 6000;
     // Interval to search for impact end (ms)
-    public static int IMPACT_END_INTERVAL = 800;
+    public static int IMPACT_END_INTERVAL = 1200;
     // Magnitude of impact
     public static double IMPACT_END_MAGNITUDE_THRESHOLD = 7;
     // Interval to search for impact start (ms)
-    public static int IMPACT_START_INTERVAL = 1000;
+    public static int IMPACT_START_INTERVAL = 1600;
     // Magnitude after impact
     public static double IMPACT_START_LOW_THRESHOLD = 6;
     // Win interval
     public static int WIN_INTERVAL = 1000;
     // AAMV
     public static double AAMV_THRESHOLD = 0.35;
-    public static int IDI_THRESHOLD = 320;
+    public static int IDI_HIGH_THRESHOLD = 500;
+    public static int IDI_LOW_THRESHOLD = 250;
     // Maximum acceleration
     public static double MAXIMUM_PEAK_THRESHOLD = 27;
     // MVI start interval
@@ -33,14 +34,14 @@ public class Constants {
     // MVI average magnitude interval
     public static double MVI_AVERAGE_MAGNITUDE_HIGH = 1;
     // PDI magnitude
-    public static int PDI_INTERVAL = 450;
-    public static int PDI_MAX = 1200;
-    public static double PDI_THRESHOLD = 5;
+    public static int PDI_MIN = 110;
+    public static int PDI_MAX = 450;
+    public static double PDI_THRESHOLD = 3;
 
     public static int ARI_INTERVAL = 700;
     public static double ARI_LOW = 0.85;
     public static double ARI_HIGH = 1.3;
-    public static double ARI_THRESHOLD = 0.07; // Kolla skillnad mellan fall och slå sensorn
+    public static double ARI_THRESHOLD = 0.02;
 
     public static double FFI_THRESHOLD = 0.8;
     public static int FFI_INTERVAL = 200;
