@@ -34,7 +34,7 @@ public class DecisionMaker {
         Calendar peakTime = Algorithms.peakTime(samples, timeArray);
 
         if (peakTime == null) {
-            Log.d("DecisionMaker", "Inget fall");
+            //Log.d("DecisionMaker", "Inget fall");
             return 0;
         }
         Log.d("DecisionMaker", " PeakTime: " + Long.toString(peakTime.getTimeInMillis()));

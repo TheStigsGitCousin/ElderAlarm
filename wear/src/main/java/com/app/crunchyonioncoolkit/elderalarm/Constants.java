@@ -22,7 +22,7 @@ public class Constants {
     // Win interval
     public static int WIN_INTERVAL = 1000;
     // AAMV
-    public static double AAMV_THRESHOLD = 0.35;
+    public static double AAMV_THRESHOLD = 0.15;  //hade 0.35
     public static int IDI_THRESHOLD = 320;
     // Maximum acceleration
     public static double MAXIMUM_PEAK_THRESHOLD = 27;
