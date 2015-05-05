@@ -41,7 +41,7 @@ public class DecisionMaker {
         Log.d("DecisionMaker", "AAMV sum: " + Integer.toString(sum));
         // IDI
         sum += Algorithms.ImpactDurationIndex(impactStart, impactEnd) ? Constants.AAMV_SCORE : 0;
-        Log.d("DecisionMaker", "AAMV sum: " + Integer.toString(sum));
+        Log.d("DecisionMaker", "IDI sum: " + Integer.toString(sum));
         // MPI
         sum += Algorithms.MaximumPeakIndex(samples) ? Constants.MPI_SCORE : 0;
         Log.d("DecisionMaker", "MPI sum: " + Integer.toString(sum));

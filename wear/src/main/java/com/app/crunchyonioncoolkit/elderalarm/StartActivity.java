@@ -62,6 +62,8 @@ public class StartActivity extends Activity {
         setPowerState();
 
         serviceIntent = new Intent(this, BackgroundService.class);
+        serviceIntent.putExtra("writeToFile", false);
+
     }
 
     private void setPowerState() {

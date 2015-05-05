@@ -22,10 +22,22 @@ public class DecisionMaker {
 //
 //    }
 
+    private static boolean isDetectionActive = true;
+
+    public static void activateAlarm() {
+        isDetectionActive = true;
+    }
+
+    public static void deactivateAlarm() {
+        isDetectionActive = false;
+    }
+
     public static void fallDetection() {
-        int resualt = allTests(AccelerometerHandler.window.getValueArray());
-        if (resualt > Constants.RESUALT_THRESHOLD) {
-            Log.d("DecisionMaker", "FALL DETECTED");
+        if (isDetectionActive) {
+            int resualt = allTests(AccelerometerHandler.window.getValueArray());
+            if (resualt > Constants.RESUALT_THRESHOLD) {
+                Log.d("DecisionMaker", "FALL DETECTED");
+            }
         }
     }
 

@@ -12,6 +12,7 @@ public class PulseHandler implements SensorEventListener {
 
     private final String TAG = "PulseHandler";
     public static final String PULSE_EVENT = "pulse";
+    private boolean writeToFile = false;
 
     // An instance of SlidingWindow to store sensor data
     public static SlidingWindow window = new SlidingWindow();
@@ -21,9 +22,11 @@ public class PulseHandler implements SensorEventListener {
     // Sub
     public static EventListener listener;
 
-    public PulseHandler() {
+    public PulseHandler(boolean writeToFile) {
         // Initialize EventListener for receiving pulse data in AlarmActivity
         listener = new EventListener();
+
+        this.writeToFile = writeToFile;
     }
 
     // Fired when senor data changed
@@ -34,7 +37,8 @@ public class PulseHandler implements SensorEventListener {
             window.newValue(event.values[0]);
 
             // Write event data to file for test purposes
-            DataOut.writeToFile(Double.toString(event.values[0]), "PUL.txt");
+            if (writeToFile)
+                DataOut.writeToFile(Double.toString(event.values[0]), "PUL.txt");
 
             // Fire event with last float array with pulse data
             listener.fireEvents(new Result(PULSE_EVENT, event.values));

@@ -24,9 +24,9 @@ public class MainActivity extends Activity {
 
         listView = (ListView) findViewById(R.id.scenarioListView);
 
-        listView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d("MainActivity", "text: " + ((TextView) view).getText());
                 if (((TextView) view).getText().equals("StartActivity")) {
                     startActivity(new Intent(getApplicationContext(), StartActivity.class));
@@ -42,11 +42,6 @@ public class MainActivity extends Activity {
                     startActivity(intent);
                 }
             }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
         });
 
         stopService(new Intent(this, BackgroundService.class));
@@ -55,7 +50,7 @@ public class MainActivity extends Activity {
         list.add("TestActivity");
         list.add("StartActivity");
         list.add("AlarmActivity");
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list);
         listView.setAdapter(adapter);
 
     }

@@ -39,7 +39,7 @@ public class DecisionMakerSimple {
     public void TestAlgorithm() {
         String data = DataOut.readFromFile("ACC.txt");
         String[] array = data.split("\n");
-        AccelerometerHandler accelerometerHandler = new AccelerometerHandler();
+        AccelerometerHandler accelerometerHandler = new AccelerometerHandler(false);
         String dataGyr = DataOut.readFromFile("GYR.txt");
         String[] arrayGyr = dataGyr.split("\n");
         String[] valueAndTime;

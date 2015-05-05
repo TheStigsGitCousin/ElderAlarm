@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 
 
 public class TestActivity extends Activity {
-    private String TAG = "MainActivity";
+    private String TAG = "TestActivity";
     private String SETTINGS = "settings";
     private String IS_ACTIVE = "isactive";
 
@@ -56,7 +56,7 @@ public class TestActivity extends Activity {
 
         initApi();
 
-        transferTextView =(TextView)findViewById(R.id.transfer_textView);
+        transferTextView = (TextView) findViewById(R.id.transfer_textView);
 
         powerButton = (Button) findViewById(R.id.powerButton);
         powerButton.setOnLongClickListener(new View.OnLongClickListener() {
@@ -78,9 +78,7 @@ public class TestActivity extends Activity {
         setPowerState();
 
         serviceIntent = new Intent(this, BackgroundService.class);
-
-        DataOut.writeToFile("123", "ACC.txt");
-        Log.d(TAG, "Data = " + DataOut.readFromFile("ACC.txt"));
+        serviceIntent.putExtra("writeToFile",true);
     }
 
     private void setPowerState() {
@@ -95,7 +93,6 @@ public class TestActivity extends Activity {
         if (!isActive) {
             powerButton.setText(getString(R.string.turn_off_button_text));
             powerOn();
-            sendData("ACC", "[DATA]");
             // Delete all files before appending new values
             DataOut.deleteFile("ACC.txt");
             DataOut.deleteFile("GYR.txt");
@@ -147,20 +144,26 @@ public class TestActivity extends Activity {
     }
 
     private void sendToMobile() {
-        for(String s : SendData.getAccelerationData()){
-            sendData("ACC",s);
+        String[] data = SendData.getAccelerationData();
+        int numberOfMessages = data.length;
+        for (String s : data) {
+            sendData("ACC", s);
         }
 
-        for(String s : SendData.getGyroscopeData()){
-            sendData("GYR",s);
+        data = SendData.getGyroscopeData();
+        numberOfMessages += data.length;
+        for (String s : data) {
+            sendData("GYR", s);
         }
 
-        for(String s : SendData.getPulseData()){
-            sendData("PUL",s);
+        data = SendData.getPulseData();
+        numberOfMessages += data.length;
+        for (String s : data) {
+            sendData("PUL", s);
         }
 
         transferTextView.setText("Transferred");
-        sendEndMessage();
+        sendEndMessage(numberOfMessages);
 
     }
 
@@ -222,14 +225,14 @@ public class TestActivity extends Activity {
     /**
      * Sends a message to the connected mobile device, telling it to show a Toast.
      */
-    private void sendEndMessage() {
+    private void sendEndMessage(final int messages) {
         Log.d(TAG, "NODE Id" + nodeId);
         if (nodeId != null) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     mGoogleApiClient.blockingConnect(CONNECTION_TIME_OUT_MS, TimeUnit.MILLISECONDS);
-                    Wearable.MessageApi.sendMessage(mGoogleApiClient, nodeId, MESSAGE, new byte[0]).setResultCallback(
+                    Wearable.MessageApi.sendMessage(mGoogleApiClient, nodeId, MESSAGE+"/"+Integer.toString(messages), new byte[0]).setResultCallback(
                             new ResultCallback<MessageApi.SendMessageResult>() {
                                 @Override
                                 public void onResult(MessageApi.SendMessageResult sendMessageResult) {

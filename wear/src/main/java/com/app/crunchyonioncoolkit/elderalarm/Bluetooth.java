@@ -102,7 +102,7 @@ public class Bluetooth {
 
                     for (BluetoothDevice device : mLeDevices) {
                         Log.d(TAG, "device name: " + device.getName() + ", device address: " + device.getAddress());
-                        if (device.getName().equals(BLE_DEVICE_NAME)) {
+                        if (device != null && device.getName().equals(BLE_DEVICE_NAME)) {
                             bluetoothGatt = device.connectGatt(activity.getApplicationContext(), false, btleGattCallback);
                             if (bluetoothGatt != null) {
                                 bluetoothGatt.discoverServices();

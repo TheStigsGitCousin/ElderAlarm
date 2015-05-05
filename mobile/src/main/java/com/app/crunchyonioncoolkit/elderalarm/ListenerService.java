@@ -60,17 +60,18 @@ public class ListenerService extends WearableListenerService implements DataApi.
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
         Log.d(TAG, "MESSAGE RECEIVED");
-        String path = messageEvent.getPath();
-        Log.d(TAG, "MESSAGE: " + path);
-        if (path.equals("NEWDATA")) {
+        String[] path = messageEvent.getPath().split("/");
+        Log.d(TAG, "MESSAGE: " + path[0]);
+        if (path[0].equals("NEWDATA")) {
             Position.startLocationTracking(this);
-        } else if (path.equals("transferred")) {
+        } else if (path[0].equals("transferred")) {
             Intent intent = new Intent();
             intent.setAction(Intent.ACTION_SEND);
             intent.putExtra("message", "done");
+            intent.putExtra("times", Integer.parseInt(path[1]));
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         }
-        showToast(path);
+        showToast(path[0]);
     }
 
     @Override
