@@ -31,21 +31,21 @@ public class Algorithms {
     // Calculate last significant impact with the ground
     public static Calendar impactEnd(double[] samples, Calendar[] timeArray, Calendar peakTime) {
         Calendar afterImpact = null;
-        Calendar endPoint = Calendar.getInstance();
-        endPoint.setTimeInMillis(peakTime.getTimeInMillis() + Constants.IMPACT_END_INTERVAL);
+        Calendar startPoint = Calendar.getInstance();
+        startPoint.setTimeInMillis(peakTime.getTimeInMillis() + Constants.IMPACT_START_INTERVAL);
 
-        if (endPoint.getTimeInMillis() > timeArray[timeArray.length - 1].getTimeInMillis())
+        if (startPoint.getTimeInMillis() > timeArray[timeArray.length - 1].getTimeInMillis())
             return null;
 
 
-        for (int i = peakTimeIndex; i < samples.length && timeArray[i].getTimeInMillis() < endPoint.getTimeInMillis(); i++) {
+        for (int i = peakTimeIndex; i < samples.length; i++) {
             if (samples[i] >= Constants.IMPACT_END_MAGNITUDE_THRESHOLD) {
                 afterImpact = timeArray[i];
                 impactEndIndex = i;
             }
         }
 
-        //Log.d(TAG, "Impact end: " + (afterImpact == null ? "null" : Long.toString(afterImpact.getTimeInMillis())));
+        Log.d(TAG, "Impact end: " + Long.toString(afterImpact.getTimeInMillis()));
         return afterImpact;
     }
 
@@ -74,7 +74,7 @@ public class Algorithms {
             }
         }
 
-        //Log.d(TAG, "Impact start: " + (afterImpact == null ? "null" : Long.toString(afterImpact.getTimeInMillis())));
+        Log.d(TAG, "Impact start: " + Long.toString(afterImpact.getTimeInMillis()));
 
         return afterImpact;
     }

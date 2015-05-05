@@ -30,7 +30,7 @@ public class MainActivity extends ActionBarActivity {
 //        GattServer.startServer(this);
 //        DecisionMakerSimple.TestAlgorithm();
         RunTestRes Res = new RunTestRes();
-        Res.readRes("martindata/1.1_2");
+        Res.readRes("3.1_1");
 
     }
 

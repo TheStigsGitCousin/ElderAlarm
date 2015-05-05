@@ -1,5 +1,8 @@
 package com.app.crunchyonioncoolkit.elderalarm;
 
+import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import java.util.Calendar;
@@ -33,6 +36,17 @@ public class DecisionMaker {
     }
 
     public static void fallDetection() {
+        int testSum = allTests();
+        if (testSum >= Constants.RESUALT_THRESHOLD) {
+            BackgroundService.context.stopService(MainActivity.serviceIntent);
+            Intent intent = new Intent(BackgroundService.context, AlarmActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            MyParcelable data = new MyParcelable(10, "cardiac arrest");
+            intent.putExtra("message", data);
+            BackgroundService.context.startActivity(intent);
+            Log.d("DecisionMaker", "FALL DETECTED");
+
+
         if (isDetectionActive) {
             int resualt = allTests(AccelerometerHandler.window.getValueArray());
             if (resualt > Constants.RESUALT_THRESHOLD) {
@@ -42,42 +56,47 @@ public class DecisionMaker {
     }
 
 
-    private static int allTests(double[] sample) {
-        Calendar peakTime = Algorithms.peakTime(AccelerometerHandler.window.getValueArray(), AccelerometerHandler.window.getTimeStampArray());
-        Log.d("DecisionMaker", " PeakTime: " + Long.toString(peakTime.getTimeInMillis()));
-        if (peakTime == null)
-            return 0;
+    private static int allTests() {
+        double[] samples = AccelerometerHandler.window.getValueArray();
+        Calendar[] timeArray = AccelerometerHandler.window.getTimeStampArray();
+        Calendar peakTime = Algorithms.peakTime(samples, timeArray);
 
+        if (peakTime == null) {
+            Log.d("DecisionMaker", "Inget fall");
+            return 0;
+        }
+        Log.d("DecisionMaker", " PeakTime: " + Long.toString(peakTime.getTimeInMillis()));
         int sum = 0;
-//        // impact end
-//        int impactEnd = Algorithms.impactEnd(sample, peakTime);
-//        // impact start
-//        int impactStart = Algorithms.impactStart(sample, impactEnd, peakTime);
-//        Log.d("DecisionMaker", "ImpactStart: " + Integer.toString(impactStart) + "   ImpactEnd: " + Integer.toString(impactEnd));
-//        if (impactEnd < 0 || impactStart < 0) {
-//            return 0;
-//        }
-//        // MPI
-//        sum += Algorithms.MaximumPeakIndex(sample, impactStart, impactEnd) ? Constants.MPI_SCORE : 0;
-//        Log.d("DecisionMaker", "MPI sum: " + Integer.toString(sum));
-//        // AAMV
-//        sum += Algorithms.AAMV(sample, impactStart, impactEnd) ? Constants.AAMV_SCORE : 0;
-//        Log.d("DecisionMaker", "AAMV sum: " + Integer.toString(sum));
-//        if (sum == 0) {
-//            return 0;
-//        }
-//        //MVI
-//        sum += Algorithms.MinimumValleyIndex(sample, impactStart, impactEnd) ? Constants.MVI_SCORE : 0;
-//        Log.d("DecisionMaker", "MVI sum: " + Integer.toString(sum));
-//        //PDI
-//        sum += Algorithms.PeakDurationIndex(sample, peakTime) ? Constants.PDI_SCORE : 0;
-//        Log.d("DecisionMaker", "PDI sum: " + Integer.toString(sum));
-//        //ARI
-//        sum += Algorithms.ActivityRatioIndex(sample, impactStart, impactEnd) ? Constants.ARI_SCORE : 0;
-//        Log.d("DecisionMaker", "ARI sum: " + Integer.toString(sum));
-//        //FFI
-//        sum += Algorithms.FreeFallIndex(sample, peakTime) ? Constants.FFI_SCORE : 0;
-//        Log.d("DecisionMaker", "FFI sum: " + Integer.toString(sum));
+        // impact end
+        Calendar impactEnd = Algorithms.impactEnd(samples, timeArray, peakTime);
+        // impact start
+        Calendar impactStart = Algorithms.impactStart(samples, impactEnd, timeArray, peakTime);
+
+        if (impactEnd == null || impactStart == null) {
+            return 0;
+        }
+        Log.d("DecisionMaker", "ImpactStart: " + Long.toString(impactStart.getTimeInMillis()) + "   ImpactEnd: " + Long.toString(impactEnd.getTimeInMillis()));
+        // AAMV
+        sum += Algorithms.AAMV(samples, timeArray, impactStart, impactEnd) ? Constants.AAMV_SCORE : 0;
+        Log.d("DecisionMaker", "AAMV sum: " + Integer.toString(sum));
+        // IDI
+        sum += Algorithms.ImpactDurationIndex(impactStart, impactEnd) ? Constants.AAMV_SCORE : 0;
+        Log.d("DecisionMaker", "IDI sum: " + Integer.toString(sum));
+        // MPI
+        sum += Algorithms.MaximumPeakIndex(samples) ? Constants.MPI_SCORE : 0;
+        Log.d("DecisionMaker", "MPI sum: " + Integer.toString(sum));
+        //MVI
+        sum += Algorithms.MinimumValleyIndex(samples, timeArray, impactStart, impactEnd) ? Constants.MVI_SCORE : 0;
+        Log.d("DecisionMaker", "MVI sum: " + Integer.toString(sum));
+        //PDI
+        sum += Algorithms.PeakDurationIndex(samples, timeArray) ? Constants.PDI_SCORE : 0;
+        Log.d("DecisionMaker", "PDI sum: " + Integer.toString(sum));
+        //ARI
+        sum += Algorithms.ActivityRatioIndex(samples, timeArray) ? Constants.ARI_SCORE : 0;
+        Log.d("DecisionMaker", "ARI sum: " + Integer.toString(sum));
+        //FFI
+        sum += Algorithms.FreeFallIndex(samples, timeArray, peakTime) ? Constants.FFI_SCORE : 0;
+        Log.d("DecisionMaker", "FFI sum: " + Integer.toString(sum));
         return sum;
     }
 }
