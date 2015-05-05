@@ -124,7 +124,9 @@ public class AlarmActivity extends Activity implements Event {
     }
 
     private void cancelAlarm() {
+
         alarm.cancelAlarm();
+        Vibration.stopVibration();
     }
 
 
@@ -165,8 +167,9 @@ public class AlarmActivity extends Activity implements Event {
             // If pulse changed
             Date currentTime = new Date();
             if (getDateDiff(lastPulseUpdate, currentTime) > PULSE_UPDATE_FREQUENCY) {
-                Log.d(TAG, "pulse changed: " + Float.toString(((float[]) values.value)[0]));
+                //Log.d(TAG, "pulse changed: " + Float.toString(((float[]) values.value)[0]));
                 pulseTextView.setText(Float.toString(((float[]) values.value)[0]));
+                lastPulseUpdate = currentTime;
             }
 
         } else if (values.type.equals(Alarm.ALARM_EVENT)) {

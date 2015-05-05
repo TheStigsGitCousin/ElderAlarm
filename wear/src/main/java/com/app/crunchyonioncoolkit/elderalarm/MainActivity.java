@@ -30,7 +30,7 @@ public class MainActivity extends Activity {
 
     public static Context currentContext;
     public static Activity currentActivity;
-    private Intent serviceIntent;
+   public static Intent serviceIntent;
 
     private static final long CONNECTION_TIME_OUT_MS = 100;
     private static final String MESSAGE = "Hello Wear!";
@@ -68,7 +68,7 @@ public class MainActivity extends Activity {
 //        intent.putExtra("message", data);
 //        startActivity(intent);
 
-        startActivity(new Intent(this, TestActivity.class));
+        //startActivity(new Intent(this, TestActivity.class));
 
 //        startService(new Intent(this, BLEService.class));
 
@@ -87,7 +87,7 @@ public class MainActivity extends Activity {
         if (powerButton.getText().toString().equals(getString(R.string.turn_on_button_text))) {
             powerButton.setText(getString(R.string.turn_off_button_text));
             powerOn();
-            sendData("","");
+
             setBackgroundActive(true);
         } else if (powerButton.getText().equals(getString(R.string.turn_off_button_text))) {
             powerButton.setText(getString(R.string.turn_on_button_text));

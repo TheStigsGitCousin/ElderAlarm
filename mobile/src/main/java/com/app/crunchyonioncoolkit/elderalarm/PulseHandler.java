@@ -51,6 +51,5 @@ public class PulseHandler implements SensorEventListener {
     public static void testChange(double SMV){
         window.newValue(SMV);
 
-        DecisionMakerSimple.detectFall();
     }
 }

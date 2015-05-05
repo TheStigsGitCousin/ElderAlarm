@@ -12,7 +12,7 @@ import android.util.Log;
  * Created by David on 2015-04-15.
  */
 public class BackgroundService extends Service {
-
+    public static Context context;
     private String TAG = "BackgroundService";
 
     private Sensor mSensor;
@@ -32,6 +32,7 @@ public class BackgroundService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        context = this;
         Log.d(TAG, "onCreate");
         initializeSensors();
     }

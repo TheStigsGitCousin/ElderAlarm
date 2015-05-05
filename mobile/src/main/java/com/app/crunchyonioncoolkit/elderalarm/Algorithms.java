@@ -32,20 +32,20 @@ public class Algorithms {
     public static Calendar impactEnd(double[] samples, Calendar[] timeArray, Calendar peakTime) {
         Calendar afterImpact = null;
         Calendar startPoint = Calendar.getInstance();
-        startPoint.setTime(peakTime.getTime());
-        startPoint.add(Calendar.MILLISECOND, Constants.IMPACT_END_INTERVAL);
+        startPoint.setTimeInMillis(peakTime.getTimeInMillis() + Constants.IMPACT_START_INTERVAL);
+
 
         if (startPoint.getTimeInMillis() > timeArray[timeArray.length - 1].getTimeInMillis())
             return null;
 
 
-        for (int i = peakTimeIndex; i < samples.length; i++) {
+        for (int i = peakTimeIndex; i < samples.length && timeArray[i].getTimeInMillis() < startPoint.getTimeInMillis(); i++) {
             if (samples[i] >= Constants.IMPACT_END_MAGNITUDE_THRESHOLD) {
                 afterImpact = timeArray[i];
                 impactEndIndex = i;
             }
         }
-
+        if(afterImpact!=null)
         Log.d(TAG, "Impact end: " + Long.toString(afterImpact.getTimeInMillis()));
         return afterImpact;
     }
@@ -56,19 +56,26 @@ public class Algorithms {
         Calendar startPoint = Calendar.getInstance();
         startPoint.setTimeInMillis(impactEnd.getTimeInMillis() - Constants.IMPACT_START_INTERVAL);
 
-        if (startPoint.getTimeInMillis() < timeArray[0].getTimeInMillis())
+
+        //Log.d(TAG, "PeakTime: " + Long.toString(peakTime.getTimeInMillis()));
+        if (startPoint.getTimeInMillis() < timeArray[0].getTimeInMillis()) {
+            Log.d(TAG, "startpoint < timeA");
             return null;
+        }
 
         for (int i = 0; i < samples.length; i++) {
-            if (timeArray[i].getTimeInMillis() > startPoint.getTimeInMillis() && timeArray[i].getTimeInMillis() <= peakTime.getTimeInMillis() &&
-                    samples[i] >= Constants.IMPACT_END_MAGNITUDE_THRESHOLD && samples[i + 1] <= Constants.IMPACT_START_LOW_THRESHOLD) {
+            if (timeArray[i].getTimeInMillis() > startPoint.getTimeInMillis() && timeArray[i].getTimeInMillis() <= peakTime.getTimeInMillis()){
+                //Log.d(TAG, "kom in lager 1");
+                if(samples[i] >= Constants.IMPACT_END_MAGNITUDE_THRESHOLD && samples[i + 1] <= Constants.IMPACT_START_LOW_THRESHOLD) {
 
                 afterImpact = timeArray[i];
                 impactStartIndex = i;
+                //Log.d(TAG, "impactStart Found");
                 break;
             }
+            }
         }
-
+        if(afterImpact!=null)
         Log.d(TAG, "Impact start: " + Long.toString(afterImpact.getTimeInMillis()));
 
         return afterImpact;
