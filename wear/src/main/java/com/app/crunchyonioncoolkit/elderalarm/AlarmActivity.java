@@ -1,18 +1,27 @@
 package com.app.crunchyonioncoolkit.elderalarm;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.wearable.MessageApi;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.NodeApi;
+import com.google.android.gms.wearable.Wearable;
+
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 // Handles alarms
@@ -23,7 +32,7 @@ public class AlarmActivity extends Activity implements Event {
     private String IS_ACTIVE = "alarmisactive";
 
     private Alarm alarm;
-    private Date lastPulseUpdate;
+    private Calendar lastPulseUpdate;
 //    private Bluetooth bluetooth;
 
     private Button cancelButton;
@@ -32,13 +41,18 @@ public class AlarmActivity extends Activity implements Event {
 
     private final int PULSE_UPDATE_FREQUENCY = 500;
 
+    private static final long CONNECTION_TIME_OUT_MS = 100;
+    private static final String MESSAGE = "alarm";
+    private GoogleApiClient mGoogleApiClient;
+    private String nodeId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm);
 
 //        bluetooth = new Bluetooth(this);
-        lastPulseUpdate = new Date();
+        lastPulseUpdate = Calendar.getInstance();
 
         cancelButton = (Button) findViewById(R.id.cancelButton);
         cancelButton.setOnLongClickListener(new View.OnLongClickListener() {
@@ -88,6 +102,7 @@ public class AlarmActivity extends Activity implements Event {
 
 //        bluetooth.startBluetooth();
 
+        initApi();
 
         Log.d(TAG, "onCreate");
     }
@@ -145,35 +160,12 @@ public class AlarmActivity extends Activity implements Event {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        // Remove listeners
-        PulseHandler.listener.removeEventListener(this);
-        Alarm.removeEventListener(this);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void onChange(Result values) {
 
         if (values.type.equals(PulseHandler.PULSE_EVENT)) {
             // If pulse changed
-            Date currentTime = new Date();
-            if (getDateDiff(lastPulseUpdate, currentTime) > PULSE_UPDATE_FREQUENCY) {
+            Calendar currentTime = Calendar.getInstance();
+            if ((currentTime.getTimeInMillis() - lastPulseUpdate.getTimeInMillis()) > PULSE_UPDATE_FREQUENCY) {
                 //Log.d(TAG, "pulse changed: " + Float.toString(((float[]) values.value)[0]));
                 pulseTextView.setText(Float.toString(((float[]) values.value)[0]));
                 lastPulseUpdate = currentTime;
@@ -182,6 +174,7 @@ public class AlarmActivity extends Activity implements Event {
         } else if (values.type.equals(Alarm.ALARM_EVENT)) {
             // If alarm state changed to 'Active'
             Log.d(TAG, "alarm activated");
+            sendAlarmMessage();
             // Register for pulse updates
             PulseHandler.listener.addEventListener(this);
             setBackgroundActive(true);
@@ -194,8 +187,76 @@ public class AlarmActivity extends Activity implements Event {
         }
     }
 
-    public static long getDateDiff(Date date1, Date date2) {
-        long diffInMillies = date2.getTime() - date1.getTime();
-        return TimeUnit.MILLISECONDS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+    /**
+     * Initializes the GoogleApiClient and gets the Node ID of the connected device.
+     */
+    private void initApi() {
+        mGoogleApiClient = getGoogleApiClient(this);
+        retrieveDeviceNode();
+    }
+
+
+    /**
+     * Returns a GoogleApiClient that can access the Wear API.
+     *
+     * @param context
+     * @return A GoogleApiClient that can make calls to the Wear API
+     */
+    private GoogleApiClient getGoogleApiClient(Context context) {
+        return new GoogleApiClient.Builder(context)
+                .addApi(Wearable.API)
+                .build();
+    }
+
+    /**
+     * Connects to the GoogleApiClient and retrieves the connected device's Node ID. If there are
+     * multiple connected devices, the first Node ID is returned.
+     */
+    private void retrieveDeviceNode() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mGoogleApiClient.connect();
+                NodeApi.GetConnectedNodesResult result =
+                        Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
+                List<Node> nodes = result.getNodes();
+                if (nodes.size() > 0) {
+                    nodeId = nodes.get(0).getId();
+                    Log.d(TAG, "NODE Id: " + nodeId);
+
+                } else {
+                    Log.d(TAG, "NO NODES FOUND");
+                }
+                Log.d(TAG, "4");
+            }
+        }).start();
+    }
+
+    /**
+     * Sends a message to the connected mobile device, telling it to show a Toast.
+     */
+    private void sendAlarmMessage() {
+        Log.d(TAG, "NODE Id" + nodeId);
+        if (nodeId != null) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    mGoogleApiClient.blockingConnect(CONNECTION_TIME_OUT_MS, TimeUnit.MILLISECONDS);
+                    Wearable.MessageApi.sendMessage(mGoogleApiClient, nodeId, MESSAGE, new byte[0]).setResultCallback(
+                            new ResultCallback<MessageApi.SendMessageResult>() {
+                                @Override
+                                public void onResult(MessageApi.SendMessageResult sendMessageResult) {
+                                    if (!sendMessageResult.getStatus().isSuccess()) {
+                                        Log.e(TAG, "Failed to send message with status code: "
+                                                + sendMessageResult.getStatus().getStatusCode());
+                                    }
+                                }
+                            }
+                    );
+                    mGoogleApiClient.disconnect();
+                    Log.d(TAG, "MESSAGE SENT");
+                }
+            }).start();
+        }
     }
 }

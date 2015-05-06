@@ -1,6 +1,7 @@
 package com.app.crunchyonioncoolkit.elderalarm;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -46,6 +47,7 @@ public class MainActivity extends ActionBarActivity {
 //        startActivity(new Intent(this, TestActivity.class));
 //        GattServer.startServer(this);
 //        DecisionMakerSimple.TestAlgorithm();
+        startActivity(new Intent(this, SMSActivity.class));
 
     }
 

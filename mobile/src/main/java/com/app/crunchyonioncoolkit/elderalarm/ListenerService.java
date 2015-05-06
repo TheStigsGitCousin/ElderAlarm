@@ -70,6 +70,11 @@ public class ListenerService extends WearableListenerService implements DataApi.
             intent.putExtra("message", "done");
             intent.putExtra("times", Integer.parseInt(path[1]));
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        } else if (path[0].equals("alarm")) {
+            Intent intent = new Intent(this, SMSActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("alarm", true);
+            startActivity(intent);
         }
         showToast(path[0]);
     }
