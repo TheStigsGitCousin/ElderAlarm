@@ -14,7 +14,7 @@ public class Alarm {
     public static final String ALARM_EVENT = "alarm";
 
     Handler mHandler;
-    private int cancelationTime = 10000;
+    private int cancelationTime = 30000;
 
     public static ArrayList<Event> listeners;
 

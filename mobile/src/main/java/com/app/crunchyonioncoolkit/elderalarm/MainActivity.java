@@ -42,12 +42,18 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
+        Button contactButton =(Button) findViewById(R.id.contact_button);
+        contactButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), SMSActivity.class));
+            }
+        });
 //        Intent serviceIntent = new Intent(this, BackgroundService.class);
 //        startService(serviceIntent);
 //        startActivity(new Intent(this, TestActivity.class));
 //        GattServer.startServer(this);
 //        DecisionMakerSimple.TestAlgorithm();
-        startActivity(new Intent(this, SMSActivity.class));
 
     }
 

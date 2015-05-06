@@ -9,29 +9,44 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Change contact"
+        android:text="Add contact"
         android:id="@+id/contactButton"
-        android:layout_marginTop="80dp"
-        android:layout_below="@+id/numberTextView"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true" />
 
-    <TextView
+    <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
+        <!--android:id="@+id/numberTextView"-->
+        <!--android:layout_marginTop="87dp"-->
+        <!--android:textSize="45dp"-->
+        <!--android:layout_below="@+id/nameTextView"-->
+        <!--android:layout_centerHorizontal="true" />-->
+
+    <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
+        <!--android:id="@+id/nameTextView"-->
+        <!--android:layout_marginTop="38dp"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:textSize="45dp" />-->
+
+    <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/numberTextView"
-        android:layout_marginTop="87dp"
-        android:textSize="45dp"
-        android:layout_below="@+id/nameTextView"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/nameTextView"
-        android:layout_marginTop="38dp"
+        android:id="@+id/contactListView"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:textSize="45dp" />
+        android:layout_toStartOf="@+id/contactButton"
+        android:layout_alignParentBottom="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Remove"
+        android:id="@+id/removeButton"
+        android:layout_below="@+id/contactButton"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>

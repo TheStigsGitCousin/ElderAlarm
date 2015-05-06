@@ -5,23 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.DataApi;
-import com.google.android.gms.wearable.MessageApi;
-import com.google.android.gms.wearable.Node;
-import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
-
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 
 public class StartActivity extends Activity {
@@ -49,7 +41,7 @@ public class StartActivity extends Activity {
         currentContext = this;
         currentActivity = this;
 
-        initApi();
+//        initApi();
         powerButton = (Button) findViewById(R.id.powerButton);
         powerButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -127,78 +119,78 @@ public class StartActivity extends Activity {
         super.onDestroy();
 //        GattServer.stopServer();
     }
-
-    /**
-     * Initializes the GoogleApiClient and gets the Node ID of the connected device.
-     */
-    private void initApi() {
-        mGoogleApiClient = getGoogleApiClient(this);
-        retrieveDeviceNode();
-    }
-
-
-    /**
-     * Returns a GoogleApiClient that can access the Wear API.
-     *
-     * @param context
-     * @return A GoogleApiClient that can make calls to the Wear API
-     */
-    private GoogleApiClient getGoogleApiClient(Context context) {
-        return new GoogleApiClient.Builder(context)
-                .addApi(Wearable.API)
-                .build();
-    }
-
-    /**
-     * Connects to the GoogleApiClient and retrieves the connected device's Node ID. If there are
-     * multiple connected devices, the first Node ID is returned.
-     */
-    private void retrieveDeviceNode() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                mGoogleApiClient.connect();
-                NodeApi.GetConnectedNodesResult result =
-                        Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
-                List<Node> nodes = result.getNodes();
-                if (nodes.size() > 0) {
-                    nodeId = nodes.get(0).getId();
-                    Log.d(TAG, "NODE Id: " + nodeId);
-
-                } else {
-                    Log.d(TAG, "NO NODES FOUND");
-                }
-                Log.d(TAG, "4");
-            }
-        }).start();
-    }
-
-    /**
-     * Sends a message to the connected mobile device, telling it to show a Toast.
-     */
-    private void sendToast() {
-        Log.d(TAG, "NODE Id" + nodeId);
-        if (nodeId != null) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    mGoogleApiClient.blockingConnect(CONNECTION_TIME_OUT_MS, TimeUnit.MILLISECONDS);
-                    Wearable.MessageApi.sendMessage(mGoogleApiClient, nodeId, MESSAGE, new byte[0]).setResultCallback(
-                            new ResultCallback<MessageApi.SendMessageResult>() {
-                                @Override
-                                public void onResult(MessageApi.SendMessageResult sendMessageResult) {
-                                    if (!sendMessageResult.getStatus().isSuccess()) {
-                                        Log.e(TAG, "Failed to send message with status code: "
-                                                + sendMessageResult.getStatus().getStatusCode());
-                                    }
-                                }
-                            }
-                    );
-                    mGoogleApiClient.disconnect();
-                    Log.d(TAG, "MESSAGE SENT");
-                }
-            }).start();
-        }
-    }
+//
+//    /**
+//     * Initializes the GoogleApiClient and gets the Node ID of the connected device.
+//     */
+//    private void initApi() {
+//        mGoogleApiClient = getGoogleApiClient(this);
+//        retrieveDeviceNode();
+//    }
+//
+//
+//    /**
+//     * Returns a GoogleApiClient that can access the Wear API.
+//     *
+//     * @param context
+//     * @return A GoogleApiClient that can make calls to the Wear API
+//     */
+//    private GoogleApiClient getGoogleApiClient(Context context) {
+//        return new GoogleApiClient.Builder(context)
+//                .addApi(Wearable.API)
+//                .build();
+//    }
+//
+//    /**
+//     * Connects to the GoogleApiClient and retrieves the connected device's Node ID. If there are
+//     * multiple connected devices, the first Node ID is returned.
+//     */
+//    private void retrieveDeviceNode() {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                mGoogleApiClient.connect();
+//                NodeApi.GetConnectedNodesResult result =
+//                        Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
+//                List<Node> nodes = result.getNodes();
+//                if (nodes.size() > 0) {
+//                    nodeId = nodes.get(0).getId();
+//                    Log.d(TAG, "NODE Id: " + nodeId);
+//
+//                } else {
+//                    Log.d(TAG, "NO NODES FOUND");
+//                }
+//                Log.d(TAG, "4");
+//            }
+//        }).start();
+//    }
+//
+//    /**
+//     * Sends a message to the connected mobile device, telling it to show a Toast.
+//     */
+//    private void sendToast() {
+//        Log.d(TAG, "NODE Id" + nodeId);
+//        if (nodeId != null) {
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    mGoogleApiClient.blockingConnect(CONNECTION_TIME_OUT_MS, TimeUnit.MILLISECONDS);
+//                    Wearable.MessageApi.sendMessage(mGoogleApiClient, nodeId, MESSAGE, new byte[0]).setResultCallback(
+//                            new ResultCallback<MessageApi.SendMessageResult>() {
+//                                @Override
+//                                public void onResult(MessageApi.SendMessageResult sendMessageResult) {
+//                                    if (!sendMessageResult.getStatus().isSuccess()) {
+//                                        Log.e(TAG, "Failed to send message with status code: "
+//                                                + sendMessageResult.getStatus().getStatusCode());
+//                                    }
+//                                }
+//                            }
+//                    );
+//                    mGoogleApiClient.disconnect();
+//                    Log.d(TAG, "MESSAGE SENT");
+//                }
+//            }).start();
+//        }
+//    }
 
 }

@@ -10,8 +10,19 @@ import android.support.v7.app.ActionBarActivity;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class SMSActivity extends ActionBarActivity {
     private String TAG = "SMSActivity";
@@ -23,20 +34,40 @@ public class SMSActivity extends ActionBarActivity {
     private static final int REQUEST_CODE_PICK_CONTACTS = 1;
     TextView nameTextView;
     TextView numberTextView;
+    ListView listView;
+    int selected = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sms);
+//
+//        nameTextView = (TextView) findViewById(R.id.nameTextView);
+//        numberTextView = (TextView) findViewById(R.id.numberTextView);
 
-        nameTextView = (TextView) findViewById(R.id.nameTextView);
-        numberTextView = (TextView) findViewById(R.id.numberTextView);
+        listView = (ListView) findViewById(R.id.contactListView);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selected = position;
+            }
+        });
 
         Button button = (Button) findViewById(R.id.contactButton);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivityForResult(new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI), REQUEST_CODE_PICK_CONTACTS);
+            }
+        });
+
+        Button removeButton = (Button) findViewById(R.id.removeButton);
+        removeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (selected != -1) {
+                    remove();
+                }
             }
         });
 
@@ -47,26 +78,81 @@ public class SMSActivity extends ActionBarActivity {
 
     }
 
+    void remove() {
+        HashSet<String> phoneNumbers = new HashSet(getContactData(PHONE_NUMBER));
+        HashSet<String> contactName = new HashSet(getContactData(CONTACT_NAME));
+        Iterator phoneIterator = phoneNumbers.iterator();
+        Iterator nameIterator = contactName.iterator();
+        int i = 0;
+        while (phoneIterator.hasNext() && nameIterator.hasNext()) {
+            Object name = nameIterator.next();
+            Object number = phoneIterator.next();
+            if (i == selected) {
+                phoneNumbers.remove(number);
+                contactName.remove(name);
+                break;
+            }
+            i++;
+        }
+
+        // We need an Editor object to make preference changes.
+        // All objects are from android.context.Context
+        SharedPreferences settings = getSharedPreferences(SETTINGS, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putStringSet(PHONE_NUMBER, phoneNumbers);
+        editor.putStringSet(CONTACT_NAME, contactName);
+
+        // Commit the edits!
+        editor.commit();
+
+        setContactData();
+    }
+
     void setContactData() {
-        String phoneNumber = getContactData(PHONE_NUMBER);
-        String contactName = getContactData(CONTACT_NAME);
-        nameTextView.setText(contactName);
-        numberTextView.setText(phoneNumber);
+//        Set<String> phoneNumber = getContactData(PHONE_NUMBER);
+        HashSet<String> phoneNumbers = new HashSet(getContactData(PHONE_NUMBER));
+        HashSet<String> contactName = new HashSet(getContactData(CONTACT_NAME));
+        List<Map<String, String>> data = new ArrayList<>();
+
+        Iterator phoneIterator = phoneNumbers.iterator();
+        Iterator nameIterator = contactName.iterator();
+        while (phoneIterator.hasNext() && nameIterator.hasNext()) {
+            String name = (String) nameIterator.next();
+            String number = (String) phoneIterator.next();
+            Log.d(TAG, name + " - " + number);
+            Map<String, String> datum = new HashMap<>(2);
+            datum.put("name", name);
+            datum.put("number", number);
+            data.add(datum);
+        }
+        SimpleAdapter adapter = new SimpleAdapter(this, data,
+                android.R.layout.simple_list_item_2,
+                new String[]{"name", "number"},
+                new int[]{android.R.id.text1,
+                        android.R.id.text2});
+
+        listView.setAdapter(adapter);
+
+//        nameTextView.setText(contactNames);
+//        numberTextView.setText(phoneNumber);
     }
 
     void sendAlarmSMS() {
-        String phoneNumber = getContactData(PHONE_NUMBER);
-        if (phoneNumber.equals("")) {
-            phoneNumber = "911";
+        HashSet<String> phoneNumbers = new HashSet(getContactData(PHONE_NUMBER));
+        if (phoneNumbers.size() == 0)
+            phoneNumbers.add("911");
+
+        for (String s : phoneNumbers) {
+            String number = new String(s);
+
+            String smsBody = "ALARM. I'm GOING TO DIE! ;)";
+            Log.d(TAG, "Send SMS to '" + number + "' with following body '" + smsBody + "'");
+
+            // Get the default instance of SmsManager
+            SmsManager smsManager = SmsManager.getDefault();
+            // Send a text based SMS
+            smsManager.sendTextMessage(number, null, smsBody, null, null);
         }
-
-        String smsBody = "ALARM. I'm GOING TO DIE! ;)";
-        Log.d(TAG, "Send SMS to '" + phoneNumber + "' with following body '" + smsBody + "'");
-
-        // Get the default instance of SmsManager
-        SmsManager smsManager = SmsManager.getDefault();
-        // Send a text based SMS
-        smsManager.sendTextMessage(phoneNumber, null, smsBody, null, null);
     }
 
     @Override
@@ -82,10 +168,10 @@ public class SMSActivity extends ActionBarActivity {
         }
     }
 
-    String getContactData(String type) {
+    Set<String> getContactData(String type) {
         // Restore preferences
         SharedPreferences settings = getSharedPreferences(SETTINGS, 0);
-        return settings.getString(type, "");
+        return settings.getStringSet(type, new HashSet<String>());
     }
 
     void setContactData(String type, String data) {
@@ -93,7 +179,9 @@ public class SMSActivity extends ActionBarActivity {
         // All objects are from android.context.Context
         SharedPreferences settings = getSharedPreferences(SETTINGS, 0);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putString(type, data);
+        Set<String> set = settings.getStringSet(type, new HashSet<String>());
+        set.add(data);
+        editor.putStringSet(type, set);
 
         // Commit the edits!
         editor.commit();
@@ -117,8 +205,9 @@ public class SMSActivity extends ActionBarActivity {
         cursor.close();
 
         Log.d(TAG, "Contact Name: " + contactName);
-        nameTextView.setText(contactName);
+//        nameTextView.setText(contactName);
         setContactData(CONTACT_NAME, contactName);
+        setContactData();
     }
 
     private void retrieveContactNumber() {
@@ -157,7 +246,8 @@ public class SMSActivity extends ActionBarActivity {
         cursorPhone.close();
 
         Log.d(TAG, "Contact Phone Number: " + contactNumber);
-        numberTextView.setText(contactNumber);
+//        numberTextView.setText(contactNumber);
         setContactData(PHONE_NUMBER, contactNumber);
+        setContactData();
     }
 }
