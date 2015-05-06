@@ -73,7 +73,7 @@ public class TestActivity extends Activity implements Event {
         accelerometerHandler = new AccelerometerHandler();
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-        mSensorManager.registerListener(accelerometerHandler, mSensor, 500000000);
+        mSensorManager.registerListener(accelerometerHandler, mSensor, SensorManager.SENSOR_DELAY_GAME);
 
         /*// Pulse
         pulseHandler = new PulseHandler();
@@ -83,7 +83,7 @@ public class TestActivity extends Activity implements Event {
         // Gyroscope
         gyroscopeHandler = new GyroscopeHandler();
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        mSensorManager.registerListener(gyroscopeHandler, mSensor, 500000000);
+        mSensorManager.registerListener(gyroscopeHandler, mSensor, SensorManager.SENSOR_DELAY_GAME);
     }
     void start() {
 
