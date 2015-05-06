@@ -215,4 +215,33 @@ public class Algorithms {
 
         return samplesAfterImpact;
     }
+
+    // Heart Rate Change
+    public static boolean HRC(double[] valueSamples, Calendar[] timeSamples, Calendar timeOfFall) {
+        double num = 0;
+        double averageBeforeFall = 0;
+        int i = 0;
+        for (i = 0; i < timeSamples.length; i++) {
+            if (timeSamples[i].getTimeInMillis() < timeOfFall.getTimeInMillis()) {
+                averageBeforeFall += valueSamples[i];
+                num++;
+            } else {
+                break;
+            }
+        }
+
+        averageBeforeFall = averageBeforeFall / num;
+        double averageAfterFall = 0;
+        for (; i < timeSamples.length; i++) {
+            averageAfterFall += valueSamples[i];
+        }
+
+        averageAfterFall = averageAfterFall / (timeSamples.length - num);
+
+        Log.d(TAG, "HRC average: " + Double.toString(averageAfterFall / averageBeforeFall));
+
+        return averageAfterFall / averageBeforeFall >= Constants.MINIMUM_PULSE_THRESHOLD ? true : false;
+    }
+
+
 }

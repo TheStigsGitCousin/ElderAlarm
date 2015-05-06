@@ -59,7 +59,6 @@ public class Constants {
     public static int RESULT_THRESHOLD = 15;
 
 
-
     //Simple detection
     public static int SMA_THRESHOLD = 3;
     public static int SMA_SIMPLE_SCORE = 5;
@@ -71,7 +70,6 @@ public class Constants {
 
     // Heart rate
     public static double MINIMUM_PULSE_THRESHOLD = 1.15;
-    public static int MHRI_SIMPLE_SCORE= 10;
-    public static int CARDIAC_ARREST_LIMIT = 40;
-    public static double CARDIAC_ARREST_RATIO = 0.8;
+    public static int MHRI_SCORE = 10;
+    public static int HRC_INTERVAL = 2000;
 }
