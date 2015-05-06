@@ -57,7 +57,7 @@ public class BackgroundService extends Service {
         accelerometerHandler = new AccelerometerHandler();
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-        mSensorManager.registerListener(accelerometerHandler, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(accelerometerHandler, mSensor, SensorManager.SENSOR_DELAY_GAME);
 
         /*// Pulse
         pulseHandler = new PulseHandler();

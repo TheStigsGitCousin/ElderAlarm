@@ -24,6 +24,7 @@ public class AccelerometerHandler implements SensorEventListener {
 //            DecisionMaker.fallDetection();
 
         //DataOut.writeToFile(Double.toString(SMV),"ACC.txt");
+        //DecisionMaker.fallDetection();
         DecisionMaker.fallDetection();
     }
 

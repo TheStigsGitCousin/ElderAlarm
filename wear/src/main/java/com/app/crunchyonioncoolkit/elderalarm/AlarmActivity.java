@@ -24,7 +24,7 @@ public class AlarmActivity extends Activity implements Event {
 
     private Alarm alarm;
     private Date lastPulseUpdate;
-    private Bluetooth bluetooth;
+    //private Bluetooth bluetooth;
 
     private Button cancelButton;
     private RelativeLayout pulseLayout;
@@ -37,7 +37,7 @@ public class AlarmActivity extends Activity implements Event {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm);
 
-        bluetooth = new Bluetooth(this);
+        //bluetooth = new Bluetooth(this);
         lastPulseUpdate = new Date();
 
         cancelButton = (Button) findViewById(R.id.cancelButton);
@@ -86,7 +86,7 @@ public class AlarmActivity extends Activity implements Event {
         // Start vibration
         Vibration.startVibration(this);
 
-        bluetooth.startBluetooth();
+        //bluetooth.startBluetooth();
 
         Log.d(TAG,"onCreate");
 
@@ -114,7 +114,7 @@ public class AlarmActivity extends Activity implements Event {
     // Navigate to MainActivity
     private void goToMainActivity() {
         // Disconnect potential bluetooth connection
-        bluetooth.stopBluetooth();
+        //bluetooth.stopBluetooth();
         // Cancel pulse updates
         PulseHandler.listener.removeEventListener(this);
 

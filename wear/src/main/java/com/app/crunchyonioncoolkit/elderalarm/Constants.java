@@ -22,25 +22,27 @@ public class Constants {
     // Win interval
     public static int WIN_INTERVAL = 1000;
     // AAMV
-    public static double AAMV_THRESHOLD = 0.15;  //hade 0.35
-    public static int IDI_THRESHOLD = 320;
+    public static double AAMV_THRESHOLD = 0.12;  //hade 0.35
+    public static int IDI_THRESHOLD = 400;                                  //Sätt övre gräns också
     // Maximum acceleration
-    public static double MAXIMUM_PEAK_THRESHOLD = 27;
+    public static double MAXIMUM_PEAK_THRESHOLD = 25;
+    public static double MPI_MAX = 55;
     // MVI start interval
     public static int MVI_Interval = 500;
     // MVI average magnitude interval
-    public static double MVI_AVERAGE_MAGNITUDE_LOW = 0.4;
+    public static double MVI_AVERAGE_MAGNITUDE_LOW = 0.95;
     // MVI average magnitude interval
-    public static double MVI_AVERAGE_MAGNITUDE_HIGH = 1;
+    public static double MVI_AVERAGE_MAGNITUDE_HIGH = 3;
     // PDI magnitude
-    public static int PDI_INTERVAL = 450;
-    public static int PDI_MAX = 1200;
+    public static int PDI_INTERVAL = 150;
+    public static int PDI_MAX = 350;
     public static double PDI_THRESHOLD = 5;
 
     public static int ARI_INTERVAL = 700;
-    public static double ARI_LOW = 0.85;
-    public static double ARI_HIGH = 1.3;
-    public static double ARI_THRESHOLD = 0.07; // Kolla skillnad mellan fall och slå sensorn
+    public static double ARI_LOW = 2;
+    public static double ARI_HIGH = 5;
+    public static double ARI_THRESHOLD = 0.65; // Kolla skillnad mellan fall och slå sensorn
+    //public static double ARI_THRESHOLD_max =
 
     public static double FFI_THRESHOLD = 0.8;
     public static int FFI_INTERVAL = 200;
@@ -48,11 +50,12 @@ public class Constants {
 
 
     public static int MPI_SCORE = 5;
-    public static int AAMV_SCORE = 5;
+    public static int IDI_SCORE = 5;
+    public static int AAMV_SCORE = 10;
     public static int MVI_SCORE = 5;
     public static int PDI_SCORE = 5;
     public static int ARI_SCORE = 5;
-    public static int FFI_SCORE = 5;
+    public static int FFI_SCORE = -5;
 
     // Resualt treshold for decision maker to alarm
     public static int RESUALT_THRESHOLD = 15;

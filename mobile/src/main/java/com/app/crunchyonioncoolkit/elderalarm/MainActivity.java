@@ -31,7 +31,7 @@ public class MainActivity extends ActionBarActivity {
 //        GattServer.startServer(this);
 //        DecisionMakerSimple.TestAlgorithm();
         RunTestRes Res = new RunTestRes();
-        Res.readRes("slag");
+        Res.readRes("5.1_5");
 
     }
 

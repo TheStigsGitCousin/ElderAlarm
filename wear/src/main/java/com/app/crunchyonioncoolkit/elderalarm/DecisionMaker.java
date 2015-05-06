@@ -22,6 +22,8 @@ public class DecisionMaker {
             intent.putExtra("message", data);
             BackgroundService.context.startActivity(intent);
             Log.d("DecisionMaker", "FALL DETECTED");
+            Log.d("DecisionMaker", "DATA GYRO: " + GyroscopeHandler.windowRaw.toString());
+            AccelerometerHandler.window = new SlidingWindow();
 
 
         }
@@ -47,12 +49,14 @@ public class DecisionMaker {
         if (impactEnd == null || impactStart == null) {
             return 0;
         }
+
         Log.d("DecisionMaker", "ImpactStart: " + Long.toString(impactStart.getTimeInMillis()) + "   ImpactEnd: " + Long.toString(impactEnd.getTimeInMillis()));
+        Log.d("DecisionMaker", "IDI: " + (impactEnd.getTimeInMillis()-impactStart.getTimeInMillis()));
         // AAMV
         sum += Algorithms.AAMV(samples, timeArray, impactStart, impactEnd) ? Constants.AAMV_SCORE : 0;
         Log.d("DecisionMaker", "AAMV sum: " + Integer.toString(sum));
         // IDI
-        sum += Algorithms.ImpactDurationIndex(impactStart, impactEnd) ? Constants.AAMV_SCORE : 0;
+        sum += Algorithms.ImpactDurationIndex(impactStart, impactEnd) ? Constants.IDI_SCORE : 0;
         Log.d("DecisionMaker", "IDI sum: " + Integer.toString(sum));
         // MPI
         sum += Algorithms.MaximumPeakIndex(samples) ? Constants.MPI_SCORE : 0;
@@ -69,6 +73,8 @@ public class DecisionMaker {
         //FFI
         sum += Algorithms.FreeFallIndex(samples, timeArray, peakTime) ? Constants.FFI_SCORE : 0;
         Log.d("DecisionMaker", "FFI sum: " + Integer.toString(sum));
+        //long PDI = AlgorithmsAdv.PeakDurationIndex(samples, timeArray);
+        //double ARI = AlgorithmsAdv.ActivityRatioIndex(samples, timeArray);
         return sum;
     }
 }

@@ -71,7 +71,7 @@ public class BackgroundService extends Service {
         // Accelerometer
         accelerometerHandler = new AccelerometerHandler();
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-        mSensorManager.registerListener(accelerometerHandler, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(accelerometerHandler, mSensor, SensorManager.SENSOR_DELAY_GAME);
 
 //        for(Sensor sensor:mSensorManager.getSensorList(Sensor.TYPE_ALL)){
 //            Log.d(TAG,"Sensor: "+sensor.getName()+", "+sensor.getStringType()+", "+sensor.getVendor()+", "+sensor.getResolution()+", "+sensor.getType()+", "+sensor.getVersion()+", "+sensor.getPower()+", "+sensor.getReportingMode());

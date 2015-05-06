@@ -5,9 +5,9 @@ import android.util.Log;
 import java.util.Calendar;
 
 /**
- * Created by David on 2015-04-14.
+ * Created by Jack on 2015-05-05.
  */
-public class Algorithms {
+public class AlgorithmsAdv {
 
     private static final String TAG = "Algorithms";
 
@@ -46,7 +46,7 @@ public class Algorithms {
             }
         }
         if(afterImpact!=null)
-        Log.d(TAG, "Impact end: " + Long.toString(afterImpact.getTimeInMillis()));
+            Log.d(TAG, "Impact end: " + Long.toString(afterImpact.getTimeInMillis()));
         return afterImpact;
     }
 
@@ -69,25 +69,25 @@ public class Algorithms {
                 //Log.d(TAG, "kom in lager 1");
                 if(samples[i] >= Constants.IMPACT_END_MAGNITUDE_THRESHOLD && samples[i + 1] <= Constants.IMPACT_START_LOW_THRESHOLD) {
 
-                afterImpact = timeArray[i];
-                impactStartIndex = i;
-                //Log.d(TAG, "impactStart Found");
-                break;
-            }
+                    afterImpact = timeArray[i];
+                    impactStartIndex = i;
+                    //Log.d(TAG, "impactStart Found");
+                    break;
+                }
             }
         }
         if(afterImpact!=null)
-        Log.d(TAG, "Impact start: " + Long.toString(afterImpact.getTimeInMillis()));
+            Log.d(TAG, "Impact start: " + Long.toString(afterImpact.getTimeInMillis()));
 
         return afterImpact;
     }
 
-    public static boolean AAMV(double[] samples, Calendar[] timeArray, Calendar impactStart, Calendar impactEnd) {
+    public static double AAMV(double[] samples, Calendar[] timeArray, Calendar impactStart, Calendar impactEnd) {
         int middle = impactStartIndex + ((impactEndIndex - impactStartIndex) / 2);
         double sum = 0;
 
 
-        for (int i = middle; i > 1 && timeArray[i].getTimeInMillis() > timeArray[middle].getTimeInMillis() - (Constants.WIN_INTERVAL / 2); i--) {
+        for (int i = middle;  i > 1 && timeArray[i].getTimeInMillis() > timeArray[middle].getTimeInMillis() - (Constants.WIN_INTERVAL / 2); i--) {
             sum += (Math.abs(samples[i - 1] - samples[i]) / Constants.WIN_INTERVAL);
         }
         for (int i = middle; timeArray[i].getTimeInMillis() < timeArray[middle].getTimeInMillis() + (Constants.WIN_INTERVAL / 2); i++) {
@@ -95,7 +95,7 @@ public class Algorithms {
         }
         Log.d(TAG, "AAMV: " + Double.toString(sum));
 
-        return (sum > Constants.AAMV_THRESHOLD);
+        return sum;
 
     }
 
@@ -103,7 +103,7 @@ public class Algorithms {
         return ((impactEnd.getTimeInMillis() - impactStart.getTimeInMillis()) > Constants.IDI_THRESHOLD);
     }
 
-    public static boolean MaximumPeakIndex(double[] samples) {
+    public static double MaximumPeakIndex(double[] samples) {
         double maxAcceleration = samples[impactStartIndex];
         for (int i = impactStartIndex + 1; i <= impactEndIndex; i++) {
             if (samples[i] > maxAcceleration)
@@ -111,11 +111,11 @@ public class Algorithms {
         }
         Log.d(TAG, "MPI: " + Double.toString(maxAcceleration));
 
-        return (maxAcceleration >= Constants.MAXIMUM_PEAK_THRESHOLD && maxAcceleration < Constants.MPI_MAX);
+        return maxAcceleration;
 
     }
 
-    public static boolean MinimumValleyIndex(double[] samples, Calendar[] timeArray, Calendar impactStart, Calendar impactEnd) {
+    public static double MinimumValleyIndex(double[] samples, Calendar[] timeArray, Calendar impactStart, Calendar impactEnd) {
         double minAcceleration = samples[impactEndIndex];
         for (int i = impactEndIndex; i >=0 && timeArray[i].getTimeInMillis() > impactStart.getTimeInMillis() - Constants.MVI_Interval; i--) {
             if (samples[i] < minAcceleration)
@@ -123,50 +123,43 @@ public class Algorithms {
         }
         Log.d(TAG, "MVI: " + Double.toString(minAcceleration));
 
-        return (minAcceleration >= Constants.MVI_AVERAGE_MAGNITUDE_LOW && minAcceleration <= Constants.MVI_AVERAGE_MAGNITUDE_HIGH);
+        return minAcceleration;
     }
 
-    public static boolean PeakDurationIndex(double[] samples, Calendar[] timeArray) {
+    public static long PeakDurationIndex(double[] samples, Calendar[] timeArray) {
         int End = PDIEnd(samples, peakTimeIndex);
         int Start = PDIStart(samples, peakTimeIndex);
         if(End < 0 || Start < 0)
-            return false;
+            return 0;
         long PDI = timeArray[End].getTimeInMillis() - timeArray[Start].getTimeInMillis();
         Log.d(TAG, "PDI: " + Long.toString(PDI));
-        return (PDI < Constants.PDI_MAX && PDI > Constants.PDI_INTERVAL);
+        return PDI;
     }
 
-    public static boolean ActivityRatioIndex(double[] samples, Calendar[] timeArray) {
+    public static double ActivityRatioIndex(double[] samples, Calendar[] timeArray) {
         int middle = impactStartIndex + ((impactEndIndex - impactStartIndex) / 2);
         double count = 0;
-        int counter = 0;
         for (int i = middle; i > 1 && timeArray[i].getTimeInMillis() > timeArray[middle].getTimeInMillis() - (Constants.ARI_INTERVAL / 2); i--) {
-            //Log.d(TAG, "diff: " + (timeArray[i].getTimeInMillis()-timeArray[i-1].getTimeInMillis()));
-            if (samples[i] < Constants.ARI_LOW || samples[i] > Constants.ARI_HIGH) {
+            if (samples[i] < Constants.ARI_LOW || samples[i] > Constants.ARI_HIGH)
                 count++;
-
-            }
-            counter++;
         }
         for (int i = middle; timeArray[i].getTimeInMillis() < timeArray[middle].getTimeInMillis() + (Constants.ARI_INTERVAL / 2); i++) {
-            if (samples[i] < Constants.ARI_LOW || samples[i] > Constants.ARI_HIGH) {
+            if (samples[i] < Constants.ARI_LOW || samples[i] > Constants.ARI_HIGH)
                 count++;
-            }
-            counter++;
         }
 
-        Log.d(TAG, "ARI: " + Double.toString(((count / counter))));
-        return ((count / counter) > Constants.ARI_THRESHOLD);
+        Log.d(TAG, "ARI: " + Double.toString(((count / Constants.ARI_INTERVAL))));
+        return (count / Constants.ARI_INTERVAL);
     }
 
-    public static boolean FreeFallIndex(double[] samples, Calendar[] timeArray, Calendar peakTime) {
+    public static double FreeFallIndex(double[] samples, Calendar[] timeArray, Calendar peakTime) {
         Calendar end = FFIEnd(samples, timeArray, peakTime);
 
         Calendar start = Calendar.getInstance();
         start.setTimeInMillis(end.getTimeInMillis() - Constants.FFI_INTERVAL);
         double average = average(samples, timeArray, start);
         Log.d(TAG, "FFI: " + Double.toString(average));
-        return (average >= Constants.FFI_MINIMUM_FALL_THRESHOLD);
+        return (average);
     }
 
     private static double average(double[] samples, Calendar[] timeArray, Calendar start) {
@@ -219,4 +212,5 @@ public class Algorithms {
 
         return samplesAfterImpact;
     }
+
 }

@@ -10,6 +10,7 @@ public class SlidingWindow {
 
     private LinkedList<Sample> window;
 
+
     public SlidingWindow() {
         window = new LinkedList<>();
     }
