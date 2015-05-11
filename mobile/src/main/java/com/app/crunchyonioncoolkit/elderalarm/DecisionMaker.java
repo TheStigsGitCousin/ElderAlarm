@@ -24,6 +24,9 @@ public class DecisionMaker {
         double[] samples = AccelerometerHandler.window.getValueArray();
         Calendar[] timeArray = AccelerometerHandler.window.getTimeStampArray();
         Calendar peakTime = Algorithms.peakTime(samples, timeArray);
+        double[] samplesGYR = GyroscopeHandler.window.getValueArray();
+        Calendar[] timeArrayGYR = GyroscopeHandler.window.getTimeStampArray();
+
 
         if (peakTime == null) {
             //Log.d("DecisionMaker", "Inget fall");
@@ -62,6 +65,9 @@ public class DecisionMaker {
         //FFI
         sum += Algorithms.FreeFallIndex(samples, timeArray, peakTime) ? Constants.FFI_SCORE : 0;
         Log.d("DecisionMaker", "FFI sum: " + Integer.toString(sum));
+
+        double area = Algorithms.GyroArea(samplesGYR, timeArrayGYR, peakTime);
+        Log.d("DecisionMaker", "Gyro Area: " + Double.toString(area));
         return sum;
     }
 }

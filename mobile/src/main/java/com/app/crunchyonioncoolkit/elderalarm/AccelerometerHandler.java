@@ -32,6 +32,6 @@ public class AccelerometerHandler implements SensorEventListener {
             window.newValue(SMV);
         }
         //Log.d(TAG, "On testChange, SMV:  " + SMV);
-        DecisionMaker.fallDetection();
+        DecisionMakerAdv.fallDetection();
     }
 }

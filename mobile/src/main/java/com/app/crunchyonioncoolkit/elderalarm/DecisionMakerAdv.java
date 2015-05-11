@@ -14,12 +14,6 @@ public class DecisionMakerAdv {
     public static void fallDetection() {
         double Score = startEval();
         if (Score >= 25) {
-            BackgroundService.context.stopService(MainActivity.serviceIntent);
-            Intent intent = new Intent(BackgroundService.context, AlarmActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            MyParcelable data = new MyParcelable(10, "cardiac arrest");
-            intent.putExtra("message", data);
-            BackgroundService.context.startActivity(intent);
             Log.d("DecisionMaker", "FALL DETECTED");
             AccelerometerHandler.window = new SlidingWindow();
             GyroscopeHandler.window = new SlidingWindow();

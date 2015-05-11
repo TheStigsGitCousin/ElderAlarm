@@ -219,4 +219,18 @@ public class Algorithms {
 
         return samplesAfterImpact;
     }
+    public static double GyroArea(double[] samples, Calendar[] timeStamp, Calendar peakTime){
+        int peakIndex = 0;
+        double area = 0;
+        for(int i = 0; i < timeStamp.length; i++){
+            if(timeStamp[i].getTimeInMillis() <= peakTime.getTimeInMillis() && timeStamp[i+1].getTimeInMillis() >= peakTime.getTimeInMillis()){
+                peakIndex = i;
+                break;
+            }
+        }
+        for(int i = peakIndex; i > 0 && (timeStamp[i].getTimeInMillis() > (timeStamp[peakIndex].getTimeInMillis() - 700)); i-- ){
+            area = area + samples[i];
+        }
+        return area;
+    }
 }

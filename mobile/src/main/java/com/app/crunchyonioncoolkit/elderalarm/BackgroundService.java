@@ -67,6 +67,6 @@ public class BackgroundService extends Service {
         // Gyroscope
         gyroscopeHandler = new GyroscopeHandler();
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        mSensorManager.registerListener(gyroscopeHandler, mSensor, 500);
+        mSensorManager.registerListener(gyroscopeHandler, mSensor, SensorManager.SENSOR_DELAY_GAME);
     }
 }
