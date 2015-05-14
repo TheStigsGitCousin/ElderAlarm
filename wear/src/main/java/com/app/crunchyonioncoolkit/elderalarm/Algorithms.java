@@ -244,4 +244,15 @@ public class Algorithms {
     }
 
 
+    public static boolean CardiacArrest(double[] samples) {
+        int count = 0;
+        for (double d : samples) {
+            if (d < 20)
+                count++;
+        }
+
+        return ((count / samples.length) >= 0.5);
+    }
+
+
 }
