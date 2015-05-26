@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/turn_on_button_text"
-        android:background="@color/blue"
+        android:background="@color/green"
         android:id="@+id/powerButton"
         android:visibility="visible"
         android:layout_marginBottom="19dp"
