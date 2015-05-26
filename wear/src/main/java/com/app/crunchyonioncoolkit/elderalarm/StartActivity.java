@@ -51,6 +51,18 @@ public class StartActivity extends Activity {
             }
         });
 
+        Button alarmButton=(Button) findViewById(R.id.alarmButton);
+        alarmButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), AlarmActivity.class);
+                MyParcelable data = new MyParcelable(10, "cardiac arrest");
+                intent.putExtra("message", data);
+                startActivity(intent);
+                return true;
+            }
+        });
+
         setPowerState();
 
         serviceIntent = new Intent(this, BackgroundService.class);

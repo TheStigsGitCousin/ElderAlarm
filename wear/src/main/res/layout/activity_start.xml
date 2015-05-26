@@ -7,11 +7,26 @@
     tools:context="com.app.crunchyonioncoolkit.elderalarm.StartActivity">
 
     <Button
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="@string/turn_on_button_text"
         android:background="@color/blue"
         android:id="@+id/powerButton"
-        android:visibility="visible" />
+        android:visibility="visible"
+        android:layout_marginBottom="19dp"
+        android:textSize="25dp"
+        android:layout_above="@+id/alarmButton"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Håll ned för att larma"
+        android:id="@+id/alarmButton"
+        android:background="@color/red"
+        android:textSize="25dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="18dp" />
 
 </RelativeLayout>
